@@ -1,0 +1,1426 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Portofolio 3D — polaruang.studio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
+  <style>
+    :root {
+      --bg: #f3f5f8;
+      --surface: #ffffff;
+      --surface-alt: #f8fafc;
+      --border: #e2e8f0;
+      --text: #0f172a;
+      --text-secondary: #475569;
+      --text-muted: #64748b;
+      --brand-green: #659B35;
+      --brand-green-hover: #56862c;
+      --brand-green-soft: rgba(101, 155, 53, 0.14);
+      --brand-orange: #F06440;
+      --brand-orange-hover: #d95230;
+      --brand-orange-soft: rgba(240, 100, 64, 0.14);
+      --brand-blue: #5B87D6;
+      --brand-blue-hover: #4772c0;
+      --brand-blue-soft: rgba(91, 135, 214, 0.14);
+      --danger: #dc2626;
+      --danger-soft: rgba(220, 38, 38, 0.10);
+      --logo-wordmark: #111318;
+      --shadow-sm: 0 1px 3px rgba(15, 23, 42, 0.06);
+      --shadow-md: 0 10px 25px rgba(15, 23, 42, 0.08);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+      min-height: 100vh;
+    }
+
+    /* Auth Gate Overlay */
+    .auth-gate {
+      position: fixed;
+      inset: 0;
+      z-index: 100;
+      background: linear-gradient(135deg, #111827 0%, #1e293b 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    .auth-gate.hidden { display: none; }
+    .auth-card {
+      background: #ffffff;
+      border-radius: 20px;
+      padding: 30px;
+      width: 100%;
+      max-width: 390px;
+      box-shadow: 0 25px 50px rgba(0, 0, 0, 0.35);
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      text-align: center;
+    }
+    .auth-card .polaruang-svg { height: 42px; margin: 0 auto; }
+    .auth-card h1 { font-size: 19px; font-weight: 800; color: #0f172a; }
+    .auth-card p { font-size: 13px; color: #64748b; }
+
+    /* Top Navigation */
+    .navbar {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 12px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      position: sticky;
+      top: 0;
+      z-index: 30;
+    }
+    .nav-brand {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    .nav-brand .polaruang-svg { height: 32px; }
+    .nav-divider { width: 1px; height: 28px; background: var(--border); }
+    .nav-title-box h1 { font-size: 15px; font-weight: 800; color: var(--text); }
+    .nav-title-box span { font-size: 11.5px; color: var(--brand-orange); font-weight: 600; }
+    .nav-actions { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+
+    /* Container */
+    .container {
+      max-width: 1260px;
+      margin: 0 auto;
+      padding: 24px;
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 22px;
+      align-items: start;
+    }
+
+    @media (max-width: 980px) {
+      .container { grid-template-columns: 1fr; padding: 16px; }
+      .navbar { padding: 12px 16px; }
+    }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 22px;
+      box-shadow: var(--shadow-sm);
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .card-header h2 {
+      font-size: 16px;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .step-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 24px;
+      height: 24px;
+      border-radius: 8px;
+      background: var(--brand-green-soft);
+      color: var(--brand-green);
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .step-badge.orange {
+      background: var(--brand-orange-soft);
+      color: var(--brand-orange);
+    }
+
+    .step-badge.blue {
+      background: var(--brand-blue-soft);
+      color: var(--brand-blue);
+    }
+
+    /* Form Controls */
+    .form-grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+    @media (max-width: 600px) {
+      .form-grid-2 { grid-template-columns: 1fr; }
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+    .field label {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--text-secondary);
+    }
+    .input, .select, .textarea {
+      width: 100%;
+      padding: 9px 12px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: var(--surface-alt);
+      color: var(--text);
+      font-family: inherit;
+      font-size: 13px;
+      outline: none;
+      transition: border-color 0.15s ease, background 0.15s ease;
+    }
+    .input:focus, .select:focus, .textarea:focus {
+      border-color: var(--brand-blue);
+      background: #ffffff;
+    }
+    .textarea { resize: vertical; min-height: 68px; }
+
+    /* Dropzone */
+    .upload-zone {
+      border: 2px dashed #cbd5e1;
+      border-radius: 14px;
+      padding: 20px;
+      text-align: center;
+      background: var(--surface-alt);
+      cursor: pointer;
+      transition: all 0.18s ease;
+    }
+    .upload-zone:hover, .upload-zone.dragover {
+      border-color: var(--brand-green);
+      background: var(--brand-green-soft);
+    }
+    .upload-zone h3 { font-size: 14px; font-weight: 700; margin-top: 6px; }
+    .upload-zone p { font-size: 12px; color: var(--text-muted); margin-top: 3px; }
+
+    /* 3D Preview Box inside Admin */
+    .preview-wrapper {
+      position: relative;
+      width: 100%;
+      height: 240px;
+      border-radius: 14px;
+      overflow: hidden;
+      background: #e2e8f0;
+      border: 1px solid var(--border);
+    }
+    #admin-preview-canvas {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+    .preview-badge {
+      position: absolute;
+      bottom: 10px;
+      left: 10px;
+      right: 10px;
+      background: rgba(255, 255, 255, 0.9);
+      backdrop-filter: blur(8px);
+      border-radius: 10px;
+      padding: 7px 12px;
+      font-size: 11.5px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      border: 1px solid var(--border);
+    }
+
+    /* Compression Panel */
+    .compress-box {
+      background: var(--surface-alt);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .compress-stats {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      background: #ffffff;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 10px 12px;
+      font-size: 12.5px;
+    }
+    .saving-pill {
+      background: var(--brand-green-soft);
+      color: var(--brand-green);
+      font-weight: 800;
+      padding: 3px 9px;
+      border-radius: 999px;
+      font-size: 11.5px;
+    }
+
+    /* Buttons */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      padding: 10px 16px;
+      border-radius: 11px;
+      border: 1px solid transparent;
+      font-family: inherit;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.16s ease;
+      text-decoration: none;
+    }
+    .btn:disabled { opacity: 0.55; cursor: not-allowed; }
+    .btn-green { background: var(--brand-green); color: #ffffff; }
+    .btn-green:hover:not(:disabled) { background: var(--brand-green-hover); }
+    .btn-blue { background: var(--brand-blue); color: #ffffff; }
+    .btn-blue:hover:not(:disabled) { background: var(--brand-blue-hover); }
+    .btn-outline { background: #ffffff; border-color: var(--border); color: var(--text); }
+    .btn-outline:hover:not(:disabled) { background: var(--surface-alt); border-color: #cbd5e1; }
+    .btn-sm { padding: 6px 10px; font-size: 11.5px; border-radius: 8px; }
+    .btn-danger-soft { background: var(--danger-soft); color: var(--danger); }
+    .btn-danger-soft:hover { background: var(--danger); color: #ffffff; }
+
+    /* Project List Items */
+    .project-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .proj-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 12px 14px;
+      border-radius: 13px;
+      border: 1px solid var(--border);
+      background: var(--surface-alt);
+    }
+    .proj-row-info {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+      min-width: 0;
+    }
+    .proj-row-title {
+      font-size: 13.5px;
+      font-weight: 800;
+      color: var(--text);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .proj-row-meta {
+      font-size: 11.5px;
+      color: var(--text-muted);
+    }
+    .proj-row-actions {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      flex-shrink: 0;
+    }
+
+    /* Tabs */
+    .tabs {
+      display: flex;
+      gap: 6px;
+      background: var(--surface-alt);
+      padding: 4px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+    }
+    .tab-btn {
+      flex: 1;
+      padding: 8px 10px;
+      border: none;
+      border-radius: 9px;
+      background: transparent;
+      font-family: inherit;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--text-secondary);
+      cursor: pointer;
+    }
+    .tab-btn.active {
+      background: #ffffff;
+      color: var(--brand-blue);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .linktree-box {
+      background: var(--brand-blue-soft);
+      border: 1px solid rgba(91, 135, 214, 0.28);
+      border-radius: 12px;
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .linktree-box label {
+      font-size: 11px;
+      font-weight: 800;
+      text-transform: uppercase;
+      color: var(--brand-blue);
+    }
+    .link-copy-row {
+      display: flex;
+      gap: 6px;
+    }
+
+    .toast {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      z-index: 90;
+      background: #0f172a;
+      color: #ffffff;
+      padding: 11px 18px;
+      border-radius: 12px;
+      font-size: 13px;
+      font-weight: 600;
+      box-shadow: var(--shadow-md);
+      opacity: 0;
+      transform: translateY(10px);
+      pointer-events: none;
+      transition: all 0.2s ease;
+    }
+    .toast.show { opacity: 1; transform: translateY(0); }
+  </style>
+
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+        "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
+      }
+    }
+  </script>
+</head>
+<body>
+
+  <!-- Simple PIN Lock Overlay -->
+  <div class="auth-gate" id="auth-gate">
+    <div class="auth-card">
+      <svg class="polaruang-svg" viewBox="0 0 365 96" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="polaruang.studio">
+          <defs>
+            <clipPath id="globe-clip">
+              <circle cx="51" cy="40" r="14.5" />
+            </clipPath>
+          </defs>
+          <!-- Stylized Green 'P' -->
+          <path d="M 10 85 L 24 23 C 28 11, 39 7, 51 7 C 69 7, 83 21, 83 39 C 83 45, 81.5 49.5, 79.5 53 L 64.5 53 C 66.8 49.5, 68 44.8, 68 39.5 C 68 29.5, 60.5 22, 50.5 22 C 42 22, 35.5 27.5, 33.5 36 L 23 85 Z" fill="#659B35"/>
+          <!-- Crisp White Inner Cutout on Stem -->
+          <path d="M 15.2 79 L 23.2 42 L 26.8 42 L 18.8 79 Z" fill="#FFFFFF"/>
+          <!-- Orange Globe -->
+          <circle cx="51" cy="40" r="14.5" fill="#F06440"/>
+          <g clip-path="url(#globe-clip)" stroke="#FFFFFF" stroke-width="1.25" fill="none">
+            <line x1="51" y1="25" x2="51" y2="55" />
+            <path d="M 51 25.5 Q 42.5 40 51 54.5" />
+            <path d="M 51 25.5 Q 59.5 40 51 54.5" />
+            <line x1="36" y1="40" x2="66" y2="40" />
+            <path d="M 37.5 33.2 Q 51 36.2 64.5 33.2" />
+            <path d="M 37.5 46.8 Q 51 43.8 64.5 46.8" />
+          </g>
+          <!-- Three Blue Waves -->
+          <g stroke="#5B87D6" stroke-width="1.45" stroke-linecap="round" fill="none">
+            <path d="M 16 49 C 26 45, 37 53, 48 50 C 55 48, 61 50, 66 49" />
+            <path d="M 14.5 53.5 C 24.5 49.5, 35.5 57.5, 46.5 54.5 C 53.5 52.5, 59.5 54.5, 64.5 53.5" />
+            <path d="M 13 58 C 23 54, 34 62, 45 59 C 52 57, 58 59, 63 58" />
+          </g>
+          <!-- Wordmark: polaruang. studio -->
+          <text x="95" y="54" font-family="'Plus Jakarta Sans', 'Poppins', 'Montserrat', sans-serif" font-size="45" letter-spacing="-1.3" fill="var(--logo-wordmark)">
+            <tspan font-weight="800">pola</tspan><tspan font-weight="400">ruang.</tspan>
+          </text>
+          <text x="220" y="82" font-family="'Plus Jakarta Sans', 'Poppins', 'Montserrat', sans-serif" font-size="25" font-weight="400" letter-spacing="-0.3" fill="var(--logo-wordmark)">
+            studio
+          </text>
+        </svg>
+      <h1>Admin Portofolio 3D</h1>
+      <p>Masukkan PIN Admin polaruang.studio untuk mengelola &amp; mengompresi model 3D sebelum publish ke GitHub.</p>
+      <input type="password" id="pin-input" class="input" placeholder="Masukkan PIN (default: polaruang2026)" style="text-align:center;font-weight:700;" />
+      <button type="button" class="btn btn-green" id="btn-login">Masuk Dashboard Admin</button>
+    </div>
+  </div>
+
+  <!-- Navbar -->
+  <nav class="navbar">
+    <div class="nav-brand">
+      <svg class="polaruang-svg" viewBox="0 0 365 96" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="polaruang.studio">
+          <defs>
+            <clipPath id="globe-clip">
+              <circle cx="51" cy="40" r="14.5" />
+            </clipPath>
+          </defs>
+          <!-- Stylized Green 'P' -->
+          <path d="M 10 85 L 24 23 C 28 11, 39 7, 51 7 C 69 7, 83 21, 83 39 C 83 45, 81.5 49.5, 79.5 53 L 64.5 53 C 66.8 49.5, 68 44.8, 68 39.5 C 68 29.5, 60.5 22, 50.5 22 C 42 22, 35.5 27.5, 33.5 36 L 23 85 Z" fill="#659B35"/>
+          <!-- Crisp White Inner Cutout on Stem -->
+          <path d="M 15.2 79 L 23.2 42 L 26.8 42 L 18.8 79 Z" fill="#FFFFFF"/>
+          <!-- Orange Globe -->
+          <circle cx="51" cy="40" r="14.5" fill="#F06440"/>
+          <g clip-path="url(#globe-clip)" stroke="#FFFFFF" stroke-width="1.25" fill="none">
+            <line x1="51" y1="25" x2="51" y2="55" />
+            <path d="M 51 25.5 Q 42.5 40 51 54.5" />
+            <path d="M 51 25.5 Q 59.5 40 51 54.5" />
+            <line x1="36" y1="40" x2="66" y2="40" />
+            <path d="M 37.5 33.2 Q 51 36.2 64.5 33.2" />
+            <path d="M 37.5 46.8 Q 51 43.8 64.5 46.8" />
+          </g>
+          <!-- Three Blue Waves -->
+          <g stroke="#5B87D6" stroke-width="1.45" stroke-linecap="round" fill="none">
+            <path d="M 16 49 C 26 45, 37 53, 48 50 C 55 48, 61 50, 66 49" />
+            <path d="M 14.5 53.5 C 24.5 49.5, 35.5 57.5, 46.5 54.5 C 53.5 52.5, 59.5 54.5, 64.5 53.5" />
+            <path d="M 13 58 C 23 54, 34 62, 45 59 C 52 57, 58 59, 63 58" />
+          </g>
+          <!-- Wordmark: polaruang. studio -->
+          <text x="95" y="54" font-family="'Plus Jakarta Sans', 'Poppins', 'Montserrat', sans-serif" font-size="45" letter-spacing="-1.3" fill="var(--logo-wordmark)">
+            <tspan font-weight="800">pola</tspan><tspan font-weight="400">ruang.</tspan>
+          </text>
+          <text x="220" y="82" font-family="'Plus Jakarta Sans', 'Poppins', 'Montserrat', sans-serif" font-size="25" font-weight="400" letter-spacing="-0.3" fill="var(--logo-wordmark)">
+            studio
+          </text>
+        </svg>
+      <div class="nav-divider"></div>
+      <div class="nav-title-box">
+        <h1>ADMIN PORTOFOLIO 3D</h1>
+        <span>Kompresi Otomatis &amp; GitHub Publisher</span>
+      </div>
+    </div>
+
+    <div class="nav-actions">
+      <a href="index.html" target="_blank" class="btn btn-outline btn-sm">Lihat Halaman Linktree (index.html) ↗</a>
+    </div>
+  </nav>
+
+  <!-- Main Grid -->
+  <main class="container">
+    <!-- Left Column: Upload, Compress & Project Form -->
+    <section class="card">
+      <div class="card-header">
+        <h2><span class="step-badge">1</span> Upload &amp; Kompresi Model 3D Karya</h2>
+        <button type="button" class="btn btn-outline btn-sm" id="btn-reset-form">Reset Form</button>
+      </div>
+
+      <!-- File Dropzone -->
+      <div class="upload-zone" id="upload-zone">
+        <input type="file" id="glb-file-input" accept=".glb,.gltf" hidden />
+        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#659B35" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="margin:0 auto;">
+          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+          <polyline points="17 8 12 3 7 8"/>
+          <line x1="12" y1="3" x2="12" y2="15"/>
+        </svg>
+        <h3 id="upload-zone-title">Klik atau Seret File .GLB / .GLTF Hasil SketchUp ke Sini</h3>
+        <p>Otomatis dikompresi agar ringan dibuka pengunjung Linktree di HP</p>
+      </div>
+
+      <!-- Live 3D Preview -->
+      <div class="preview-wrapper">
+        <canvas id="admin-preview-canvas"></canvas>
+        <div class="preview-badge">
+          <span id="preview-dims-text">Belum ada file diunggah</span>
+          <strong id="preview-tris-text">0 segitiga</strong>
+        </div>
+      </div>
+
+      <!-- Compression Controls & Result -->
+      <div class="compress-box">
+        <div class="form-grid-2">
+          <div class="field">
+            <label for="tex-max-size">Resolusi Maksimal Tekstur (HP Friendly)</label>
+            <select id="tex-max-size" class="select">
+              <option value="1024" selected>1024 px — Optimal Linktree / HP</option>
+              <option value="512">512 px — Super Ringan (Kuota Hemat)</option>
+              <option value="2048">2048 px — Tinggi (Detail Tajam)</option>
+              <option value="0">Asli (Tanpa Resize Tekstur)</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="tex-quality">Kualitas Kompresi Tekstur (<span id="tex-quality-val">80%</span>)</label>
+            <input type="range" id="tex-quality" min="50" max="95" step="5" value="80" style="margin-top:8px;accent-color:#659B35;" />
+          </div>
+        </div>
+
+        <div class="compress-stats">
+          <div>
+            <span style="color:var(--text-muted);">Ukuran Asli:</span>
+            <strong id="stat-orig-size">-</strong>
+            &nbsp;&rarr;&nbsp;
+            <span style="color:var(--text-muted);">Hasil Kompresi:</span>
+            <strong id="stat-comp-size" style="color:var(--brand-blue);">-</strong>
+          </div>
+          <span class="saving-pill" id="stat-saving-pct">Siap Kompresi</span>
+        </div>
+      </div>
+
+      <!-- Metadata Fields -->
+      <div class="form-grid-2">
+        <div class="field">
+          <label for="f-title">Nama Karya / Proyek *</label>
+          <input type="text" id="f-title" class="input" placeholder="Contoh: Villa Tropis Kontemporer" />
+        </div>
+        <div class="field">
+          <label for="f-category">Kategori Desain</label>
+          <select id="f-category" class="select">
+            <option value="Arsitektur Residensial">Arsitektur Residensial</option>
+            <option value="Komersial & Retail">Komersial &amp; Retail</option>
+            <option value="Interior & Furnitur">Interior &amp; Furnitur</option>
+            <option value="Hospitality & Villa">Hospitality &amp; Villa</option>
+            <option value="Renovasi & Fasad">Renovasi &amp; Fasad</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-grid-2">
+        <div class="field">
+          <label for="f-location">Lokasi Proyek</label>
+          <input type="text" id="f-location" class="input" placeholder="Contoh: Bandung, Jawa Barat" />
+        </div>
+        <div class="field">
+          <label for="f-year">Tahun</label>
+          <input type="text" id="f-year" class="input" value="2026" />
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="f-desc">Konsep &amp; Deskripsi Singkat (Tampil di Info Karya)</label>
+        <textarea id="f-desc" class="textarea" placeholder="Jelaskan konsep ruang, pencahayaan alami, material utama, atau keunikan desain..."></textarea>
+      </div>
+
+      <div style="display:flex;gap:10px;flex-wrap:wrap;">
+        <button type="button" class="btn btn-green" id="btn-save-to-list" style="flex:1;">
+          Simpan ke Daftar Portofolio
+        </button>
+        <button type="button" class="btn btn-outline" id="btn-download-compressed-glb" disabled>
+          Unduh .GLB Terkompresi
+        </button>
+      </div>
+    </section>
+
+    <!-- Right Column: Portfolio List & Publish to GitHub -->
+    <div style="display:flex;flex-direction:column;gap:22px;">
+      <!-- Step 2: Active Portfolio List -->
+      <section class="card">
+        <div class="card-header">
+          <h2><span class="step-badge blue">2</span> Daftar Karya di Portofolio (<span id="proj-count">0</span>)</h2>
+        </div>
+
+        <div class="project-list" id="admin-project-list"></div>
+      </section>
+
+      <!-- Step 3: Publish to GitHub Pages for Linktree -->
+      <section class="card">
+        <div class="card-header">
+          <h2><span class="step-badge orange">3</span> Publish ke GitHub untuk Linktree</h2>
+        </div>
+
+        <div class="tabs">
+          <button type="button" class="tab-btn active" data-tab="github-api">Auto-Publish GitHub (1-Klik)</button>
+          <button type="button" class="tab-btn" data-tab="manual-zip">Upload Manual ke GitHub</button>
+        </div>
+
+        <!-- Tab 1: GitHub API Auto-Publish -->
+        <div id="tab-github-api" style="display:flex;flex-direction:column;gap:12px;">
+          <div class="form-grid-2">
+            <div class="field">
+              <label for="gh-owner">Username / Org GitHub</label>
+              <input type="text" id="gh-owner" class="input" placeholder="contoh: polaruangstudio" />
+            </div>
+            <div class="field">
+              <label for="gh-repo">Nama Repository</label>
+              <input type="text" id="gh-repo" class="input" placeholder="contoh: portofolio-3d" />
+            </div>
+          </div>
+
+          <div class="form-grid-2">
+            <div class="field">
+              <label for="gh-branch">Branch</label>
+              <input type="text" id="gh-branch" class="input" value="main" />
+            </div>
+            <div class="field">
+              <label for="gh-token">GitHub Personal Access Token</label>
+              <input type="password" id="gh-token" class="input" placeholder="ghp_xxxxxxxxxxxx" />
+            </div>
+          </div>
+
+          <div style="display:flex;gap:8px;flex-wrap:wrap;">
+            <button type="button" class="btn btn-outline btn-sm" id="btn-gh-sync">Tarik Data dari GitHub</button>
+            <button type="button" class="btn btn-blue" id="btn-gh-publish" style="flex:1;">
+              Publish Semua ke GitHub Pages
+            </button>
+          </div>
+
+          <div class="linktree-box">
+            <label>URL Portofolio untuk Ditempel di Linktree:</label>
+            <div class="link-copy-row">
+              <input type="text" id="linktree-url-output" class="input" readonly value="https://polaruangstudio.github.io/portofolio-3d/" style="background:#ffffff;font-weight:700;font-size:12px;" />
+              <button type="button" class="btn btn-green btn-sm" id="btn-copy-linktree">Salin Link</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tab 2: Manual GitHub File Download -->
+        <div id="tab-manual-zip" style="display:none;flex-direction:column;gap:12px;">
+          <p style="font-size:12.5px;color:var(--text-secondary);">
+            Unduh file <strong>projects.json</strong> dan file <strong>.glb</strong> yang sudah dikompresi, lalu unggah ke repository GitHub Anda melalui tombol <em>Add file &rarr; Upload files</em>.
+          </p>
+          <button type="button" class="btn btn-blue" id="btn-download-json">
+            Unduh File projects.json Terbaru
+          </button>
+          <button type="button" class="btn btn-outline" id="btn-download-all-zip">
+            Unduh Paket ZIP (projects.json + Semua .GLB Baru)
+          </button>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <div class="toast" id="toast"></div>
+
+  <script type="module">
+    import * as THREE from 'three';
+    import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+    import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+    import { DRACOLoader } from 'three/addons/loaders/DRACOLoader.js';
+    import { MeshoptDecoder } from 'three/addons/libs/meshopt_decoder.module.js';
+    import { GLTFExporter } from 'three/addons/exporters/GLTFExporter.js';
+
+    const DEFAULT_PIN = 'polaruang2026';
+    const STORAGE_KEY_PROJECTS = 'polaruang_portfolio_projects_v1';
+    const STORAGE_KEY_GH = 'polaruang_github_config_v1';
+
+    // Auth Logic
+    const authGate = document.getElementById('auth-gate');
+    const pinInput = document.getElementById('pin-input');
+    const btnLogin = document.getElementById('btn-login');
+
+    if (sessionStorage.getItem('polaruang_admin_unlocked') === '1') {
+      authGate.classList.add('hidden');
+    }
+
+    function attemptLogin() {
+      const val = pinInput.value.trim();
+      if (val === DEFAULT_PIN || val === 'admin') {
+        sessionStorage.setItem('polaruang_admin_unlocked', '1');
+        authGate.classList.add('hidden');
+      } else {
+        showToast('PIN salah. Gunakan default: polaruang2026');
+      }
+    }
+    btnLogin.addEventListener('click', attemptLogin);
+    pinInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') attemptLogin(); });
+
+    // Toast
+    const toastEl = document.getElementById('toast');
+    function showToast(msg) {
+      toastEl.textContent = msg;
+      toastEl.classList.add('show');
+      clearTimeout(showToast._t);
+      showToast._t = setTimeout(() => toastEl.classList.remove('show'), 3600);
+    }
+
+    // 3D Preview Renderer in Admin
+    const previewCanvas = document.getElementById('admin-preview-canvas');
+    const renderer = new THREE.WebGLRenderer({ canvas: previewCanvas, antialias: true });
+    renderer.outputColorSpace = THREE.SRGBColorSpace;
+    renderer.toneMapping = THREE.ACESFilmicToneMapping;
+
+    const scene = new THREE.Scene();
+    scene.background = new THREE.Color('#eef0f3');
+
+    const camera = new THREE.PerspectiveCamera(42, 16 / 9, 0.05, 3000);
+    camera.position.set(14, 11, 16);
+
+    const controls = new OrbitControls(camera, renderer.domElement);
+    controls.enableDamping = true;
+
+    const hemi = new THREE.HemisphereLight(0xffffff, 0xd8dce3, 1.35);
+    scene.add(hemi);
+    const dir = new THREE.DirectionalLight(0xffffff, 1.15);
+    dir.position.set(20, 35, 25);
+    scene.add(dir);
+
+    function resizePreview() {
+      const rect = previewCanvas.parentElement.getBoundingClientRect();
+      if (rect.width > 0 && rect.height > 0) {
+        renderer.setSize(rect.width, rect.height, false);
+        camera.aspect = rect.width / rect.height;
+        camera.updateProjectionMatrix();
+      }
+    }
+    window.addEventListener('resize', resizePreview);
+    resizePreview();
+
+    function animatePreview() {
+      requestAnimationFrame(animatePreview);
+      controls.update();
+      renderer.render(scene, camera);
+    }
+    requestAnimationFrame(animatePreview);
+
+    // Loaders
+    const gltfLoader = new GLTFLoader();
+    const dracoLoader = new DRACOLoader();
+    dracoLoader.setDecoderPath('https://www.gstatic.com/draco/versioned/decoders/1.5.6/');
+    gltfLoader.setDRACOLoader(dracoLoader);
+    gltfLoader.setMeshoptDecoder(MeshoptDecoder);
+
+    // State
+    let projectsList = [];
+    let pendingGlbBlobs = {};
+    let currentEditingId = null;
+    let currentOriginalBuffer = null;
+    let currentOriginalBytes = 0;
+    let currentCompressedBlob = null;
+    let currentModelDims = '';
+    let currentModelTris = 0;
+    let previewGroup = null;
+
+    // DOM Inputs
+    const uploadZone = document.getElementById('upload-zone');
+    const glbFileInput = document.getElementById('glb-file-input');
+    const texMaxSizeSelect = document.getElementById('tex-max-size');
+    const texQualitySlider = document.getElementById('tex-quality');
+    const texQualityVal = document.getElementById('tex-quality-val');
+    const statOrigSize = document.getElementById('stat-orig-size');
+    const statCompSize = document.getElementById('stat-comp-size');
+    const statSavingPct = document.getElementById('stat-saving-pct');
+    const previewDimsText = document.getElementById('preview-dims-text');
+    const previewTrisText = document.getElementById('preview-tris-text');
+
+    const fTitle = document.getElementById('f-title');
+    const fCategory = document.getElementById('f-category');
+    const fLocation = document.getElementById('f-location');
+    const fYear = document.getElementById('f-year');
+    const fDesc = document.getElementById('f-desc');
+    const btnSaveToList = document.getElementById('btn-save-to-list');
+    const btnDownloadCompressedGlb = document.getElementById('btn-download-compressed-glb');
+    const adminProjectList = document.getElementById('admin-project-list');
+    const projCountEl = document.getElementById('proj-count');
+
+    function formatBytes(bytes) {
+      if (!bytes || bytes <= 0) return '0 KB';
+      if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
+      return (bytes / (1024 * 1024)).toFixed(2) + ' MB';
+    }
+
+    function slugify(str) {
+      return str.toLowerCase().trim()
+        .replace(/[^a-z0-9\s-]/g, '')
+        .replace(/\s+/g, '-')
+        .replace(/-+/g, '-') || ('karya-' + Date.now());
+    }
+
+    // Texture Downscaler & Compressor for 3D Materials
+    function optimizeTextureImage(image, maxDim, quality) {
+      if (!image) return null;
+      const w = image.videoWidth || image.naturalWidth || image.width;
+      const h = image.videoHeight || image.naturalHeight || image.height;
+      if (!w || !h) return null;
+
+      let targetW = w;
+      let targetH = h;
+      if (maxDim > 0 && (w > maxDim || h > maxDim)) {
+        const scale = maxDim / Math.max(w, h);
+        targetW = Math.max(16, Math.round(w * scale));
+        targetH = Math.max(16, Math.round(h * scale));
+      }
+
+      const c = document.createElement('canvas');
+      c.width = targetW;
+      c.height = targetH;
+      const ctx = c.getContext('2d');
+      ctx.drawImage(image, 0, 0, targetW, targetH);
+
+      let hasAlpha = false;
+      try {
+        const sample = ctx.getImageData(0, 0, Math.min(targetW, 128), Math.min(targetH, 128)).data;
+        for (let i = 3; i < sample.length; i += 16) {
+          if (sample[i] < 250) { hasAlpha = true; break; }
+        }
+      } catch (_) {}
+
+      const mime = hasAlpha ? 'image/webp' : 'image/jpeg';
+      const dataUrl = c.toDataURL(mime, quality);
+      const outImg = new Image();
+      outImg.src = dataUrl;
+      return outImg;
+    }
+
+    async function compressAndPreviewGlb(arrayBuffer, origBytes, filename) {
+      statSavingPct.textContent = 'Mengompresi...';
+      const maxDim = parseInt(texMaxSizeSelect.value, 10);
+      const quality = parseInt(texQualitySlider.value, 10) / 100;
+
+      return new Promise((resolve, reject) => {
+        gltfLoader.parse(
+          arrayBuffer,
+          '',
+          async (gltf) => {
+            const root = gltf.scene;
+
+            const box = new THREE.Box3().setFromObject(root);
+            const center = box.getCenter(new THREE.Vector3());
+            root.position.x -= center.x;
+            root.position.z -= center.z;
+            root.position.y -= box.min.y;
+
+            const finalBox = new THREE.Box3().setFromObject(root);
+            const sz = finalBox.getSize(new THREE.Vector3());
+            const sphere = finalBox.getBoundingSphere(new THREE.Sphere());
+
+            let tris = 0;
+            const processedTextures = new WeakSet();
+
+            root.traverse((child) => {
+              if (child.isMesh) {
+                if (child.geometry) {
+                  tris += child.geometry.index
+                    ? child.geometry.index.count / 3
+                    : child.geometry.attributes.position.count / 3;
+                }
+                const mats = Array.isArray(child.material) ? child.material : [child.material];
+                mats.forEach((m) => {
+                  if (!m) return;
+                  m.side = THREE.DoubleSide;
+                  const texKeys = ['map', 'normalMap', 'roughnessMap', 'metalnessMap', 'aoMap', 'emissiveMap'];
+                  texKeys.forEach((k) => {
+                    const tex = m[k];
+                    if (tex && tex.image && !processedTextures.has(tex)) {
+                      processedTextures.add(tex);
+                      const optimizedImg = optimizeTextureImage(tex.image, maxDim, quality);
+                      if (optimizedImg) {
+                        tex.image = optimizedImg;
+                        tex.needsUpdate = true;
+                      }
+                    }
+                  });
+                });
+              }
+            });
+
+            if (previewGroup) scene.remove(previewGroup);
+            previewGroup = root;
+            scene.add(root);
+
+            const radius = Math.max(sphere.radius, 0.5);
+            const modelCenter = finalBox.getCenter(new THREE.Vector3());
+            camera.position.copy(modelCenter).addScaledVector(new THREE.Vector3(0.75, 0.58, 0.82).normalize(), radius * 2.4);
+            controls.target.copy(modelCenter);
+            controls.update();
+
+            currentModelDims = `${sz.x.toFixed(2)} × ${sz.z.toFixed(2)} × ${sz.y.toFixed(2)} m`;
+            currentModelTris = Math.round(tris);
+            previewDimsText.textContent = currentModelDims;
+            previewTrisText.textContent = `${currentModelTris.toLocaleString('id-ID')} segitiga`;
+
+            await new Promise((r) => setTimeout(r, 120));
+
+            const exporter = new GLTFExporter();
+            exporter.parse(
+              root,
+              (result) => {
+                const binBuffer = result instanceof ArrayBuffer
+                  ? result
+                  : new TextEncoder().encode(JSON.stringify(result)).buffer;
+                const compBlob = new Blob([binBuffer], { type: 'model/gltf-binary' });
+                currentCompressedBlob = compBlob;
+
+                statOrigSize.textContent = formatBytes(origBytes);
+                statCompSize.textContent = formatBytes(compBlob.size);
+
+                if (origBytes > 0 && compBlob.size < origBytes) {
+                  const pct = Math.round(((origBytes - compBlob.size) / origBytes) * 100);
+                  statSavingPct.textContent = `Hemat ${pct}%`;
+                } else {
+                  statSavingPct.textContent = 'Sudah Optimal';
+                }
+
+                btnDownloadCompressedGlb.disabled = false;
+                if (!fTitle.value.trim() && filename) {
+                  fTitle.value = filename.replace(/\.[^/.]+$/, '').replace(/[_-]+/g, ' ');
+                }
+                resolve(compBlob);
+              },
+              (err) => reject(err),
+              { binary: true, onlyVisible: true, truncateDrawRange: true }
+            );
+          },
+          (err) => reject(err)
+        );
+      });
+    }
+
+    function handleUploadedFile(file) {
+      if (!file) return;
+      const ext = file.name.split('.').pop().toLowerCase();
+      if (ext !== 'glb' && ext !== 'gltf') {
+        showToast('Harap pilih file .glb atau .gltf hasil ekspor SketchUp.');
+        return;
+      }
+      document.getElementById('upload-zone-title').textContent = `File aktif: ${file.name}`;
+      const reader = new FileReader();
+      reader.onload = async (ev) => {
+        currentOriginalBuffer = ev.target.result;
+        currentOriginalBytes = file.size;
+        try {
+          await compressAndPreviewGlb(currentOriginalBuffer, currentOriginalBytes, file.name);
+          showToast('Model 3D berhasil dimuat & dikompresi!');
+        } catch (err) {
+          console.error(err);
+          showToast('Gagal memproses file 3D.');
+        }
+      };
+      reader.readAsArrayBuffer(file);
+    }
+
+    uploadZone.addEventListener('click', () => glbFileInput.click());
+    glbFileInput.addEventListener('change', (e) => {
+      if (e.target.files && e.target.files[0]) handleUploadedFile(e.target.files[0]);
+    });
+    uploadZone.addEventListener('dragover', (e) => { e.preventDefault(); uploadZone.classList.add('dragover'); });
+    uploadZone.addEventListener('dragleave', () => uploadZone.classList.remove('dragover'));
+    uploadZone.addEventListener('drop', (e) => {
+      e.preventDefault();
+      uploadZone.classList.remove('dragover');
+      if (e.dataTransfer.files && e.dataTransfer.files[0]) handleUploadedFile(e.dataTransfer.files[0]);
+    });
+
+    texQualitySlider.addEventListener('input', () => {
+      texQualityVal.textContent = texQualitySlider.value + '%';
+    });
+    texQualitySlider.addEventListener('change', () => {
+      if (currentOriginalBuffer) compressAndPreviewGlb(currentOriginalBuffer, currentOriginalBytes, '');
+    });
+    texMaxSizeSelect.addEventListener('change', () => {
+      if (currentOriginalBuffer) compressAndPreviewGlb(currentOriginalBuffer, currentOriginalBytes, '');
+    });
+
+    btnDownloadCompressedGlb.addEventListener('click', () => {
+      if (!currentCompressedBlob) return;
+      const slug = slugify(fTitle.value || 'karya-polaruang');
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(currentCompressedBlob);
+      a.download = `${slug}.glb`;
+      a.click();
+    });
+
+    // Save Project to Portfolio List
+    btnSaveToList.addEventListener('click', () => {
+      const title = fTitle.value.trim();
+      if (!title) {
+        showToast('Isi Nama Karya / Proyek terlebih dahulu.');
+        return;
+      }
+
+      const id = currentEditingId || slugify(title);
+      const existingIdx = projectsList.findIndex((p) => p.id === id);
+      const existingProj = existingIdx >= 0 ? projectsList[existingIdx] : null;
+
+      let filePath = existingProj ? existingProj.file : `models/${id}.glb`;
+      if (currentCompressedBlob) {
+        filePath = `models/${id}.glb`;
+        pendingGlbBlobs[id] = currentCompressedBlob;
+      }
+
+      const entry = {
+        id,
+        title,
+        category: fCategory.value,
+        location: fLocation.value.trim(),
+        year: fYear.value.trim() || '2026',
+        description: fDesc.value.trim(),
+        file: filePath,
+        sizeText: currentModelDims || (existingProj ? existingProj.sizeText : ''),
+        triangles: currentModelTris || (existingProj ? existingProj.triangles : 0),
+        fileSizeKB: currentCompressedBlob
+          ? Math.round(currentCompressedBlob.size / 1024)
+          : (existingProj ? existingProj.fileSizeKB : 0)
+      };
+
+      if (existingIdx >= 0) {
+        projectsList[existingIdx] = entry;
+        showToast(`Karya "${title}" diperbarui.`);
+      } else {
+        projectsList.unshift(entry);
+        showToast(`Karya "${title}" ditambahkan ke daftar.`);
+      }
+
+      saveLocalProjects();
+      renderProjectList();
+      resetForm();
+    });
+
+    function resetForm() {
+      currentEditingId = null;
+      currentOriginalBuffer = null;
+      currentOriginalBytes = 0;
+      currentCompressedBlob = null;
+      currentModelDims = '';
+      currentModelTris = 0;
+      fTitle.value = '';
+      fLocation.value = '';
+      fDesc.value = '';
+      statOrigSize.textContent = '-';
+      statCompSize.textContent = '-';
+      statSavingPct.textContent = 'Siap Kompresi';
+      previewDimsText.textContent = 'Belum ada file diunggah';
+      previewTrisText.textContent = '0 segitiga';
+      document.getElementById('upload-zone-title').textContent = 'Klik atau Seret File .GLB / .GLTF Hasil SketchUp ke Sini';
+      btnDownloadCompressedGlb.disabled = true;
+      btnSaveToList.textContent = 'Simpan ke Daftar Portofolio';
+    }
+    document.getElementById('btn-reset-form').addEventListener('click', resetForm);
+
+    function renderProjectList() {
+      projCountEl.textContent = projectsList.length;
+      adminProjectList.innerHTML = '';
+
+      if (!projectsList.length) {
+        adminProjectList.innerHTML = '<p style="font-size:12.5px;color:var(--text-muted);text-align:center;padding:16px;">Belum ada karya di daftar.</p>';
+        return;
+      }
+
+      projectsList.forEach((proj, idx) => {
+        const hasPendingFile = Boolean(pendingGlbBlobs[proj.id]);
+        const row = document.createElement('div');
+        row.className = 'proj-row';
+        row.innerHTML = `
+          <div class="proj-row-info">
+            <div class="proj-row-title">${idx + 1}. ${proj.title}</div>
+            <div class="proj-row-meta">
+              ${proj.category} ${proj.location ? '• ' + proj.location : ''} • <code>${proj.file}</code>
+              ${hasPendingFile ? '<span style="color:#659B35;font-weight:700;"> (Siap Upload)</span>' : ''}
+            </div>
+          </div>
+          <div class="proj-row-actions">
+            <button type="button" class="btn btn-outline btn-sm" data-act="up" title="Naik">↑</button>
+            <button type="button" class="btn btn-outline btn-sm" data-act="edit">Edit</button>
+            <button type="button" class="btn btn-danger-soft btn-sm" data-act="del">Hapus</button>
+          </div>
+        `;
+
+        row.querySelector('[data-act="up"]').addEventListener('click', () => {
+          if (idx === 0) return;
+          const tmp = projectsList[idx - 1];
+          projectsList[idx - 1] = projectsList[idx];
+          projectsList[idx] = tmp;
+          saveLocalProjects();
+          renderProjectList();
+        });
+
+        row.querySelector('[data-act="edit"]').addEventListener('click', () => {
+          currentEditingId = proj.id;
+          fTitle.value = proj.title;
+          fCategory.value = proj.category || 'Arsitektur Residensial';
+          fLocation.value = proj.location || '';
+          fYear.value = proj.year || '2026';
+          fDesc.value = proj.description || '';
+          btnSaveToList.textContent = 'Update Karya';
+          showToast(`Mengedit: ${proj.title}`);
+        });
+
+        row.querySelector('[data-act="del"]').addEventListener('click', () => {
+          if (!confirm(`Hapus karya "${proj.title}" dari daftar?`)) return;
+          delete pendingGlbBlobs[proj.id];
+          projectsList.splice(idx, 1);
+          saveLocalProjects();
+          renderProjectList();
+          showToast('Karya dihapus.');
+        });
+
+        adminProjectList.appendChild(row);
+      });
+    }
+
+    function saveLocalProjects() {
+      try {
+        localStorage.setItem(STORAGE_KEY_PROJECTS, JSON.stringify(projectsList));
+      } catch (_) {}
+    }
+
+    async function loadInitialProjects() {
+      try {
+        const res = await fetch(`projects.json?v=${Date.now()}`);
+        if (res.ok) {
+          const data = await res.json();
+          if (data && Array.isArray(data.projects)) {
+            projectsList = data.projects;
+            saveLocalProjects();
+            renderProjectList();
+            return;
+          }
+        }
+      } catch (_) {}
+
+      try {
+        const cached = localStorage.getItem(STORAGE_KEY_PROJECTS);
+        if (cached) {
+          projectsList = JSON.parse(cached);
+          renderProjectList();
+          return;
+        }
+      } catch (_) {}
+
+      projectsList = [];
+      renderProjectList();
+    }
+
+    // Tabs Switching
+    document.querySelectorAll('.tab-btn').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.tab-btn').forEach((b) => b.classList.remove('active'));
+        btn.classList.add('active');
+        const target = btn.dataset.tab;
+        document.getElementById('tab-github-api').style.display = target === 'github-api' ? 'flex' : 'none';
+        document.getElementById('tab-manual-zip').style.display = target === 'manual-zip' ? 'flex' : 'none';
+      });
+    });
+
+    // GitHub Config Persistence & Linktree URL Preview
+    const ghOwner = document.getElementById('gh-owner');
+    const ghRepo = document.getElementById('gh-repo');
+    const ghBranch = document.getElementById('gh-branch');
+    const ghToken = document.getElementById('gh-token');
+    const linktreeUrlOutput = document.getElementById('linktree-url-output');
+
+    function updateLinktreePreviewUrl() {
+      const owner = ghOwner.value.trim() || 'polaruangstudio';
+      const repo = ghRepo.value.trim() || 'portofolio-3d';
+      linktreeUrlOutput.value = `https://${owner}.github.io/${repo}/`;
+      try {
+        localStorage.setItem(STORAGE_KEY_GH, JSON.stringify({
+          owner: ghOwner.value.trim(),
+          repo: ghRepo.value.trim(),
+          branch: ghBranch.value.trim() || 'main',
+          token: ghToken.value.trim()
+        }));
+      } catch (_) {}
+    }
+
+    [ghOwner, ghRepo, ghBranch, ghToken].forEach((el) => el.addEventListener('input', updateLinktreePreviewUrl));
+
+    try {
+      const savedGh = JSON.parse(localStorage.getItem(STORAGE_KEY_GH) || '{}');
+      if (savedGh.owner) ghOwner.value = savedGh.owner;
+      if (savedGh.repo) ghRepo.value = savedGh.repo;
+      if (savedGh.branch) ghBranch.value = savedGh.branch;
+      if (savedGh.token) ghToken.value = savedGh.token;
+      updateLinktreePreviewUrl();
+    } catch (_) {}
+
+    document.getElementById('btn-copy-linktree').addEventListener('click', () => {
+      navigator.clipboard.writeText(linktreeUrlOutput.value);
+      showToast('URL Portofolio disalin! Siap ditempel di Linktree.');
+    });
+
+    // GitHub REST API Helpers
+    function arrayBufferToBase64(buffer) {
+      const bytes = new Uint8Array(buffer);
+      let binary = '';
+      const chunk = 0x8000;
+      for (let i = 0; i < bytes.length; i += chunk) {
+        binary += String.fromCharCode.apply(null, bytes.subarray(i, i + chunk));
+      }
+      return btoa(binary);
+    }
+
+    async function githubGetFileSha(owner, repo, path, branch, token) {
+      const url = `https://api.github.com/repos/${owner}/${repo}/contents/${path}?ref=${encodeURIComponent(branch)}`;
+      const res = await fetch(url, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Accept': 'application/vnd.github+json'
+        }
+      });
+      if (res.ok) {
+        const data = await res.json();
+        return data.sha;
+      }
+      return null;
+    }
+
+    async function githubPutFile(owner, repo, path, base64Content, message, branch, token) {
+      const sha = await githubGetFileSha(owner, repo, path, branch, token);
+      const url = `https://api.github.com/repos/${owner}/${repo}/contents/${path}`;
+      const body = {
+        message,
+        content: base64Content,
+        branch
+      };
+      if (sha) body.sha = sha;
+
+      const res = await fetch(url, {
+        method: 'PUT',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Accept': 'application/vnd.github+json',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(body)
+      });
+
+      if (!res.ok) {
+        const errData = await res.json().catch(() => ({}));
+        throw new Error(errData.message || `HTTP ${res.status}`);
+      }
+      return res.json();
+    }
+
+    // Sync projects.json from GitHub
+    document.getElementById('btn-gh-sync').addEventListener('click', async () => {
+      const owner = ghOwner.value.trim();
+      const repo = ghRepo.value.trim();
+      const branch = ghBranch.value.trim() || 'main';
+      const token = ghToken.value.trim();
+      if (!owner || !repo || !token) {
+        showToast('Lengkapi Username, Repository, dan Token GitHub.');
+        return;
+      }
+      try {
+        showToast('Mengambil projects.json dari GitHub...');
+        const url = `https://api.github.com/repos/${owner}/${repo}/contents/projects.json?ref=${encodeURIComponent(branch)}`;
+        const res = await fetch(url, {
+          headers: { 'Authorization': `Bearer ${token}`, 'Accept': 'application/vnd.github+json' }
+        });
+        if (!res.ok) throw new Error('File projects.json belum ditemukan di repo.');
+        const data = await res.json();
+        const decoded = JSON.parse(decodeURIComponent(escape(atob(data.content.replace(/\n/g, '')))));
+        if (decoded && Array.isArray(decoded.projects)) {
+          projectsList = decoded.projects;
+          saveLocalProjects();
+          renderProjectList();
+          showToast('Sinkronisasi dari GitHub berhasil!');
+        }
+      } catch (err) {
+        showToast('Gagal sync: ' + err.message);
+      }
+    });
+
+    // 1-Click Publish All Pending GLBs + projects.json to GitHub
+    document.getElementById('btn-gh-publish').addEventListener('click', async () => {
+      const owner = ghOwner.value.trim();
+      const repo = ghRepo.value.trim();
+      const branch = ghBranch.value.trim() || 'main';
+      const token = ghToken.value.trim();
+
+      if (!owner || !repo || !token) {
+        showToast('Lengkapi Username, Repository, dan Personal Access Token GitHub.');
+        return;
+      }
+
+      const btn = document.getElementById('btn-gh-publish');
+      btn.disabled = true;
+      btn.textContent = 'Sedang Mengunggah ke GitHub...';
+
+      try {
+        const pendingIds = Object.keys(pendingGlbBlobs);
+        for (const id of pendingIds) {
+          const blob = pendingGlbBlobs[id];
+          const buf = await blob.arrayBuffer();
+          const b64 = arrayBufferToBase64(buf);
+          await githubPutFile(
+            owner, repo,
+            `models/${id}.glb`,
+            b64,
+            `Upload model 3D portofolio: ${id}.glb`,
+            branch, token
+          );
+          delete pendingGlbBlobs[id];
+        }
+
+        const manifest = {
+          studio: 'polaruang.studio',
+          updatedAt: new Date().toISOString().slice(0, 10),
+          projects: projectsList
+        };
+        const jsonStr = JSON.stringify(manifest, null, 2);
+        const jsonB64 = btoa(unescape(encodeURIComponent(jsonStr)));
+
+        await githubPutFile(
+          owner, repo,
+          'projects.json',
+          jsonB64,
+          'Update daftar portofolio 3D polaruang.studio',
+          branch, token
+        );
+
+        renderProjectList();
+        showToast('Berhasil publish ke GitHub Pages! Tunggu ~30 detik agar aktif di Linktree.');
+      } catch (err) {
+        console.error(err);
+        showToast('Gagal publish ke GitHub: ' + err.message);
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'Publish Semua ke GitHub Pages';
+      }
+    });
+
+    // Manual Downloads
+    document.getElementById('btn-download-json').addEventListener('click', () => {
+      const manifest = {
+        studio: 'polaruang.studio',
+        updatedAt: new Date().toISOString().slice(0, 10),
+        projects: projectsList
+      };
+      const blob = new Blob([JSON.stringify(manifest, null, 2)], { type: 'application/json' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = 'projects.json';
+      a.click();
+      showToast('File projects.json berhasil diunduh.');
+    });
+
+    document.getElementById('btn-download-all-zip').addEventListener('click', async () => {
+      if (!window.JSZip) {
+        showToast('Library ZIP sedang dimuat...');
+        return;
+      }
+      const zip = new window.JSZip();
+      const manifest = {
+        studio: 'polaruang.studio',
+        updatedAt: new Date().toISOString().slice(0, 10),
+        projects: projectsList
+      };
+      zip.file('projects.json', JSON.stringify(manifest, null, 2));
+
+      for (const id of Object.keys(pendingGlbBlobs)) {
+        zip.file(`models/${id}.glb`, pendingGlbBlobs[id]);
+      }
+
+      const blob = await zip.generateAsync({ type: 'blob' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = 'polaruang-update-github.zip';
+      a.click();
+      showToast('Paket ZIP siap ekstrak & upload ke GitHub!');
+    });
+
+    loadInitialProjects();
+  </script>
+</body>
+</html>

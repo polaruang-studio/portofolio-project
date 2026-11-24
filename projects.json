@@ -1,0 +1,42 @@
+{
+  "studio": "polaruang.studio",
+  "updatedAt": "2026-11-24",
+  "projects": [
+    {
+      "id": "villa-tropis-kontemporer",
+      "title": "Villa Tropis Kontemporer 2 Lantai",
+      "category": "Arsitektur Residensial",
+      "location": "Bandung, Jawa Barat",
+      "year": "2026",
+      "description": "Eksplorasi ruang terbuka dengan bukaan kaca penuh, kisi kayu alami, dan sirkulasi udara silang untuk hunian tropis modern.",
+      "file": "builtin:house",
+      "sizeText": "12.38 × 16.10 × 6.25 m",
+      "triangles": 35050,
+      "fileSizeKB": 420
+    },
+    {
+      "id": "ruang-komersial-kafe-studio",
+      "title": "Kafe & Creative Space Polaruang",
+      "category": "Komersial & Retail",
+      "location": "Jakarta Selatan",
+      "year": "2026",
+      "description": "Komposisi massa bangunan komersial 3 lantai dengan fasad curtain wall, kanopi teras hijau, dan tata ruang fleksibel.",
+      "file": "builtin:commercial",
+      "sizeText": "15.00 × 20.50 × 11.40 m",
+      "triangles": 48200,
+      "fileSizeKB": 580
+    },
+    {
+      "id": "paviliun-galeri-struktur-baja",
+      "title": "Paviliun & Galeri Bentang Lebar",
+      "category": "Hospitality & Villa",
+      "location": "Ubud, Bali",
+      "year": "2025",
+      "description": "Struktur atap pelana bentang lebar dengan pencahayaan skylight atap monitor untuk ruang pamer dan studio kreatif.",
+      "file": "builtin:warehouse",
+      "sizeText": "24.00 × 36.00 × 9.80 m",
+      "triangles": 29400,
+      "fileSizeKB": 390
+    }
+  ]
+}
