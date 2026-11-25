@@ -2,51 +2,36 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
-  <title>Portofolio 3D Interaktif — polaruang.studio</title>
-  <meta name="description" content="Jelajahi karya arsitektur dan desain ruang 3D interaktif dari polaruang.studio." />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>polaruang.studio — Portofolio Arsitektur 3D</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg-canvas: #eef0f3;
-      --surface: rgba(255, 255, 255, 0.90);
-      --surface-solid: #ffffff;
-      --surface-hover: rgba(243, 244, 246, 0.96);
-      --border: rgba(17, 24, 39, 0.09);
-      --text-primary: #111827;
-      --text-secondary: #4b5563;
-      --text-muted: #6b7280;
       --brand-green: #659B35;
-      --brand-green-hover: #56862c;
       --brand-green-soft: rgba(101, 155, 53, 0.14);
-      --brand-orange: #F06440;
-      --brand-orange-soft: rgba(240, 100, 64, 0.14);
+      --brand-coral: #F06440;
       --brand-blue: #5B87D6;
-      --brand-blue-soft: rgba(91, 135, 214, 0.14);
-      --shadow-sm: 0 2px 10px rgba(15, 23, 42, 0.06);
-      --shadow-md: 0 10px 30px rgba(15, 23, 42, 0.12);
-      --shadow-lg: 0 20px 50px rgba(15, 23, 42, 0.18);
-      --logo-wordmark: #111318;
+      --bg-canvas: #F5F6F4;
+      --surface: rgba(255, 255, 255, 0.92);
+      --surface-solid: #FFFFFF;
+      --surface-hover: #F3F5F2;
+      --border: rgba(17, 24, 39, 0.10);
+      --text-primary: #182026;
+      --text-secondary: #5C6873;
+      --shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
     }
 
-    body.dark-theme {
-      --bg-canvas: #111827;
-      --surface: rgba(30, 41, 59, 0.90);
-      --surface-solid: #1e293b;
-      --surface-hover: rgba(51, 65, 85, 0.96);
-      --border: rgba(255, 255, 255, 0.10);
-      --text-primary: #f8fafc;
-      --text-secondary: #cbd5e1;
-      --text-muted: #94a3b8;
-      --brand-green-soft: rgba(101, 155, 53, 0.24);
-      --brand-orange-soft: rgba(240, 100, 64, 0.24);
-      --brand-blue-soft: rgba(91, 135, 214, 0.24);
-      --shadow-sm: 0 2px 12px rgba(0, 0, 0, 0.28);
-      --shadow-md: 0 10px 30px rgba(0, 0, 0, 0.38);
-      --shadow-lg: 0 22px 52px rgba(0, 0, 0, 0.50);
-      --logo-wordmark: #f8fafc;
+    body.dark {
+      --bg-canvas: #121518;
+      --surface: rgba(26, 31, 37, 0.92);
+      --surface-solid: #1A1F25;
+      --surface-hover: #242B33;
+      --border: rgba(255, 255, 255, 0.11);
+      --text-primary: #F1F5F9;
+      --text-secondary: #94A3B8;
+      --shadow: 0 12px 32px rgba(0, 0, 0, 0.38);
     }
 
     * {
@@ -60,227 +45,257 @@
       width: 100%;
       height: 100%;
       overflow: hidden;
-      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-      background-color: var(--bg-canvas);
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg-canvas);
       color: var(--text-primary);
-      transition: background-color 0.25s ease, color 0.25s ease;
+      transition: background 0.25s ease, color 0.25s ease;
     }
 
-    #viewer-canvas {
+    #viewer-container {
       position: fixed;
       inset: 0;
       width: 100%;
       height: 100%;
+      z-index: 1;
+    }
+
+    canvas {
       display: block;
-      touch-action: none;
+      width: 100%;
+      height: 100%;
       outline: none;
     }
 
-    /* Top Header Bar */
+    .pill {
+      background: var(--surface);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow);
+      border-radius: 18px;
+      transition: background 0.25s ease, border-color 0.25s ease, transform 0.2s ease;
+    }
+
+    /* Top Bar Layout */
     .top-bar {
       position: fixed;
-      top: max(12px, env(safe-area-inset-top));
-      left: 12px;
-      right: 12px;
-      z-index: 25;
+      top: 16px;
+      left: 16px;
+      right: 16px;
+      z-index: 20;
       display: flex;
-      align-items: center;
+      align-items: flex-start;
       justify-content: space-between;
-      gap: 10px;
+      gap: 12px;
       pointer-events: none;
     }
 
-    .header-card {
-      pointer-events: auto;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      background: var(--surface);
-      backdrop-filter: blur(14px);
-      -webkit-backdrop-filter: blur(14px);
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      padding: 6px 14px;
-      box-shadow: var(--shadow-sm);
-      min-width: 0;
-    }
-
-    .brand-link {
-      display: flex;
-      align-items: center;
-      text-decoration: none;
-      flex-shrink: 0;
-    }
-
-    .polaruang-svg {
-      height: 30px;
-      width: auto;
-      display: block;
-    }
-
-    .header-divider {
-      width: 1px;
-      height: 24px;
-      background: var(--border);
-      flex-shrink: 0;
-    }
-
-    .app-title-group {
+    .top-left-stack {
       display: flex;
       flex-direction: column;
-      min-width: 0;
-    }
-
-    .app-title {
-      font-size: 13px;
-      font-weight: 800;
-      letter-spacing: 0.04em;
-      color: var(--text-primary);
-      white-space: nowrap;
-      line-height: 1.15;
-    }
-
-    .app-subtitle {
-      font-size: 10.5px;
-      font-weight: 600;
-      color: var(--brand-orange);
-      white-space: nowrap;
-      line-height: 1.2;
-    }
-
-    /* Project Switcher Bar */
-    .project-switcher-wrap {
+      align-items: flex-start;
+      gap: 10px;
       pointer-events: auto;
+    }
+
+    .brand-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 16px;
+      text-decoration: none;
+      color: var(--text-primary);
+    }
+
+    .brand-mark {
+      width: 28px;
+      height: 28px;
+      border-radius: 8px;
+      background: linear-gradient(135deg, var(--brand-green), #4D7C25);
+      display: grid;
+      place-items: center;
+      color: #fff;
+      font-weight: 700;
+      font-size: 14px;
       position: relative;
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+
+    .brand-mark::after {
+      content: "";
+      position: absolute;
+      right: -4px;
+      bottom: -4px;
+      width: 12px;
+      height: 12px;
+      background: var(--brand-coral);
+      border-radius: 50%;
+    }
+
+    .brand-name {
+      font-weight: 700;
+      font-size: 15px;
+      letter-spacing: -0.02em;
+      line-height: 1.1;
+    }
+
+    .brand-name span {
+      display: block;
+      font-size: 10px;
+      font-weight: 600;
+      color: var(--text-secondary);
+      letter-spacing: 0.02em;
+    }
+
+    /* Info Dimension Pill */
+    .info-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 9px;
+      padding: 7px 14px 7px 8px;
+      border-radius: 999px;
+      cursor: pointer;
+      font-size: 12.5px;
+      font-weight: 500;
+      color: var(--text-primary);
+      max-width: min(360px, 88vw);
+    }
+
+    .info-pill:hover {
+      background: var(--surface-hover);
+    }
+
+    .info-dot {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: rgba(240, 100, 64, 0.14);
+      color: var(--brand-coral);
+      display: grid;
+      place-items: center;
+      font-weight: 700;
+      font-size: 12px;
+      flex-shrink: 0;
+    }
+
+    .info-text {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    /* Project Selector Center */
+    .selector-wrap {
+      position: relative;
+      pointer-events: auto;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .selector-pill {
       display: flex;
       align-items: center;
       gap: 4px;
-      background: var(--surface);
-      backdrop-filter: blur(14px);
-      -webkit-backdrop-filter: blur(14px);
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      padding: 4px;
-      box-shadow: var(--shadow-sm);
-      min-width: 0;
-      max-width: 430px;
+      padding: 6px 8px;
     }
 
-    .nav-arrow-btn {
-      width: 32px;
-      height: 34px;
-      border-radius: 10px;
+    .nav-arrow {
+      width: 34px;
+      height: 38px;
       border: none;
       background: transparent;
       color: var(--text-secondary);
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
+      border-radius: 12px;
       cursor: pointer;
-      transition: all 0.15s ease;
-      flex-shrink: 0;
+      display: grid;
+      place-items: center;
+      transition: background 0.15s, color 0.15s;
     }
 
-    .nav-arrow-btn:hover {
+    .nav-arrow:hover {
       background: var(--surface-hover);
       color: var(--text-primary);
     }
 
-    .project-select-btn {
+    .selector-trigger {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 10px;
+      gap: 14px;
+      padding: 6px 14px;
+      border-radius: 12px;
+      border: 1.5px solid var(--text-primary);
       background: var(--surface-solid);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 6px 11px;
-      font-family: inherit;
       color: var(--text-primary);
       cursor: pointer;
-      min-width: 0;
-      flex: 1;
+      min-width: 245px;
+      max-width: 340px;
       text-align: left;
-      transition: border-color 0.16s ease;
     }
 
-    .project-select-btn:hover {
-      border-color: var(--brand-green);
+    .selector-meta {
+      overflow: hidden;
     }
 
-    .project-select-text {
-      display: flex;
-      flex-direction: column;
-      min-width: 0;
-    }
-
-    .project-select-badge {
-      font-size: 9.5px;
+    .selector-kicker {
+      font-size: 10px;
       font-weight: 700;
-      text-transform: uppercase;
       letter-spacing: 0.05em;
+      text-transform: uppercase;
       color: var(--brand-green);
-      line-height: 1.1;
+      margin-bottom: 2px;
     }
 
-    .project-select-name {
-      font-size: 12.5px;
+    .selector-title {
+      font-size: 13.5px;
       font-weight: 700;
-      color: var(--text-primary);
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
-      line-height: 1.25;
     }
 
-    .project-dropdown {
+    /* Project Dropdown Menu */
+    .project-menu {
       position: absolute;
-      top: calc(100% + 8px);
-      left: 0;
-      right: 0;
-      min-width: 300px;
-      max-height: 62vh;
+      top: calc(100% + 10px);
+      width: min(370px, 92vw);
+      max-height: 60vh;
       overflow-y: auto;
-      background: var(--surface-solid);
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      padding: 6px;
-      box-shadow: var(--shadow-lg);
+      padding: 12px;
       display: none;
-      flex-direction: column;
-      gap: 4px;
       z-index: 40;
-      animation: fadeSlideDown 0.16s ease;
     }
 
-    .project-dropdown.open {
-      display: flex;
+    .project-menu.open {
+      display: block;
     }
 
-    .dropdown-header-label {
+    .menu-label {
       font-size: 10.5px;
       font-weight: 700;
+      letter-spacing: 0.06em;
+      color: var(--text-secondary);
+      padding: 4px 8px 10px;
       text-transform: uppercase;
-      letter-spacing: 0.05em;
-      color: var(--text-muted);
-      padding: 6px 10px 4px;
     }
 
     .project-item {
+      width: 100%;
+      border: 1px solid transparent;
+      background: transparent;
+      color: var(--text-primary);
+      border-radius: 14px;
+      padding: 10px 12px;
       display: flex;
       align-items: center;
       justify-content: space-between;
       gap: 10px;
-      width: 100%;
-      padding: 9px 11px;
-      border-radius: 11px;
-      border: 1px solid transparent;
-      background: transparent;
-      color: var(--text-primary);
-      font-family: inherit;
-      text-align: left;
       cursor: pointer;
-      transition: all 0.15s ease;
+      text-align: left;
+      margin-bottom: 4px;
+      transition: background 0.15s, border-color 0.15s;
     }
 
     .project-item:hover {
@@ -292,64 +307,48 @@
       border-color: rgba(101, 155, 53, 0.35);
     }
 
-    .project-item-info {
-      display: flex;
-      flex-direction: column;
-      gap: 2px;
-      min-width: 0;
-    }
-
     .project-item-title {
-      font-size: 12.5px;
+      font-size: 13px;
       font-weight: 700;
-      color: var(--text-primary);
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
+      margin-bottom: 3px;
     }
 
-    .project-item-meta {
-      font-size: 11px;
-      color: var(--text-muted);
+    .project-item-sub {
+      font-size: 11.5px;
+      color: var(--text-secondary);
     }
 
-    .project-item-tag {
-      font-size: 10px;
-      font-weight: 700;
-      padding: 3px 8px;
+    .cat-badge {
+      font-size: 10.5px;
+      font-weight: 600;
+      padding: 4px 9px;
       border-radius: 999px;
-      background: var(--brand-blue-soft);
+      background: rgba(91, 135, 214, 0.14);
       color: var(--brand-blue);
+      white-space: nowrap;
       flex-shrink: 0;
     }
 
-    /* Right Tools Cluster */
-    .toolbar-group {
+    /* Top Right Tools */
+    .tools-pill {
       pointer-events: auto;
       display: flex;
       align-items: center;
       gap: 4px;
-      background: var(--surface);
-      backdrop-filter: blur(14px);
-      -webkit-backdrop-filter: blur(14px);
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      padding: 5px;
-      box-shadow: var(--shadow-sm);
+      padding: 6px;
     }
 
     .tool-btn {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      width: 34px;
-      height: 34px;
-      border-radius: 9px;
-      border: 1px solid transparent;
+      width: 38px;
+      height: 38px;
+      border: none;
+      border-radius: 12px;
       background: transparent;
       color: var(--text-secondary);
       cursor: pointer;
-      transition: all 0.16s ease;
+      display: grid;
+      place-items: center;
+      transition: background 0.15s, color 0.15s;
     }
 
     .tool-btn:hover {
@@ -360,181 +359,200 @@
     .tool-btn.active {
       background: var(--brand-green-soft);
       color: var(--brand-green);
-      border-color: rgba(101, 155, 53, 0.30);
     }
 
-    .tool-btn svg {
-      width: 17px;
-      height: 17px;
-      stroke-width: 2;
-    }
-
-    /* Sub-Bar: Info Pill + Mobile Controls */
-    .sub-bar {
+    /* Project Detail Drawer / Card */
+    .detail-card {
       position: fixed;
-      top: calc(max(12px, env(safe-area-inset-top)) + 60px);
-      left: 12px;
-      right: 12px;
-      z-index: 20;
-      display: flex;
-      align-items: flex-start;
-      justify-content: space-between;
-      gap: 8px;
-      pointer-events: none;
-    }
-
-    .info-widget {
-      display: flex;
-      flex-direction: column;
-      align-items: flex-start;
-      gap: 6px;
-      max-width: calc(100vw - 24px);
-      pointer-events: none;
-    }
-
-    .info-pill-toggle {
-      pointer-events: auto;
-      display: inline-flex;
-      align-items: center;
-      gap: 7px;
-      background: var(--surface);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-      border: 1px solid var(--border);
-      border-radius: 999px;
-      padding: 6px 12px;
-      font-family: inherit;
-      font-size: 12px;
-      font-weight: 500;
-      color: var(--text-secondary);
-      box-shadow: var(--shadow-sm);
-      cursor: pointer;
-      transition: all 0.18s ease;
-    }
-
-    .info-pill-toggle:hover {
-      background: var(--surface-hover);
-      color: var(--text-primary);
-    }
-
-    .info-icon-badge {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      width: 17px;
-      height: 17px;
-      border-radius: 50%;
-      background: var(--brand-orange-soft);
-      color: var(--brand-orange);
-      font-size: 11px;
-      font-weight: 800;
-      flex-shrink: 0;
-    }
-
-    .desktop-inline-stats {
-      display: inline;
-      color: var(--text-primary);
-      font-weight: 500;
-    }
-
-    .mobile-pill-label {
+      top: 122px;
+      left: 16px;
+      z-index: 25;
+      width: min(350px, calc(100vw - 32px));
+      padding: 16px 18px;
       display: none;
-      font-weight: 600;
-      color: var(--text-primary);
     }
 
-    .info-popover {
-      pointer-events: auto;
-      background: var(--surface-solid);
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      padding: 13px 15px;
-      box-shadow: var(--shadow-md);
-      font-size: 12px;
-      color: var(--text-secondary);
-      line-height: 1.5;
-      max-width: 335px;
-      display: none;
-      animation: fadeSlideDown 0.16s ease;
-    }
-
-    .info-popover.open {
+    .detail-card.open {
       display: block;
     }
 
-    .info-popover-title {
-      font-size: 13.5px;
-      font-weight: 800;
-      color: var(--text-primary);
+    .detail-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .detail-title {
+      font-size: 15px;
+      font-weight: 700;
+      line-height: 1.3;
+    }
+
+    .detail-close {
+      border: none;
+      background: var(--surface-hover);
+      color: var(--text-secondary);
+      width: 26px;
+      height: 26px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 14px;
+      flex-shrink: 0;
+    }
+
+    .dim-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      margin: 12px 0;
+    }
+
+    .dim-box {
+      background: var(--surface-hover);
+      border-radius: 12px;
+      padding: 8px 10px;
+      text-align: center;
+    }
+
+    .dim-box span {
+      display: block;
+      font-size: 10.5px;
+      color: var(--text-secondary);
       margin-bottom: 2px;
     }
 
-    .info-popover-loc {
-      font-size: 11px;
-      font-weight: 600;
-      color: var(--brand-orange);
-      margin-bottom: 7px;
+    .dim-box strong {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text-primary);
     }
 
-    .info-popover-desc {
-      font-size: 11.5px;
+    .detail-desc {
+      font-size: 12.5px;
+      line-height: 1.55;
       color: var(--text-secondary);
-      margin-bottom: 8px;
-      padding-bottom: 8px;
-      border-bottom: 1px solid var(--border);
     }
 
-    .info-popover-row {
-      display: flex;
-      justify-content: space-between;
-      gap: 12px;
-      padding: 2px 0;
-    }
-
-    .info-popover-note {
-      margin-top: 7px;
-      padding-top: 6px;
-      border-top: 1px solid var(--border);
-      font-size: 10.5px;
-      color: var(--text-muted);
-    }
-
-    @keyframes fadeSlideDown {
-      from { opacity: 0; transform: translateY(-4px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    /* Bottom Camera View Dock */
-    .view-dock-wrapper {
+    /* Bottom Dock (Section Controls + Camera Views) */
+    .bottom-dock {
       position: fixed;
-      bottom: max(14px, env(safe-area-inset-bottom));
-      left: 0;
-      right: 0;
+      bottom: 18px;
+      left: 50%;
+      transform: translateX(-50%);
       z-index: 20;
       display: flex;
-      justify-content: center;
-      padding: 0 12px;
-      pointer-events: none;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      width: max-content;
+      max-width: calc(100vw - 24px);
     }
 
-    .view-dock {
-      pointer-events: auto;
+    /* Section Cut Control Bar */
+    .section-panel {
+      display: none;
+      align-items: center;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
+      padding: 10px 14px;
+      border-radius: 16px;
+      width: 100%;
+    }
+
+    .section-panel.open {
+      display: flex;
+    }
+
+    .section-badge {
+      font-size: 11.5px;
+      font-weight: 700;
+      color: var(--brand-coral);
+      background: rgba(240, 100, 64, 0.13);
+      padding: 5px 10px;
+      border-radius: 999px;
+      white-space: nowrap;
+    }
+
+    .section-axis-group {
+      display: inline-flex;
+      background: var(--surface-hover);
+      padding: 3px;
+      border-radius: 10px;
+      gap: 2px;
+    }
+
+    .axis-btn {
+      border: none;
+      background: transparent;
+      color: var(--text-secondary);
+      font-family: inherit;
+      font-size: 11.5px;
+      font-weight: 600;
+      padding: 5px 9px;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    .axis-btn.active {
+      background: var(--surface-solid);
+      color: var(--text-primary);
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+    }
+
+    .slider-wrap {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+      color: var(--text-secondary);
+    }
+
+    .slider-wrap input[type="range"] {
+      width: 135px;
+      accent-color: var(--brand-green);
+      cursor: pointer;
+    }
+
+    .slider-val {
+      font-weight: 700;
+      color: var(--text-primary);
+      min-width: 48px;
+      text-align: right;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .reset-cut-btn {
+      border: 1px solid var(--border);
+      background: var(--surface-solid);
+      color: var(--text-primary);
+      font-family: inherit;
+      font-size: 11.5px;
+      font-weight: 600;
+      padding: 5px 10px;
+      border-radius: 9px;
+      cursor: pointer;
+    }
+
+    .reset-cut-btn:hover {
+      background: var(--surface-hover);
+    }
+
+    /* Camera View Presets Bar */
+    .views-pill {
       display: flex;
       align-items: center;
       gap: 4px;
-      background: var(--surface);
-      backdrop-filter: blur(14px);
-      -webkit-backdrop-filter: blur(14px);
-      border: 1px solid var(--border);
+      padding: 6px;
       border-radius: 999px;
-      padding: 5px;
-      box-shadow: var(--shadow-md);
-      max-width: 100%;
       overflow-x: auto;
+      max-width: 100%;
       scrollbar-width: none;
     }
 
-    .view-dock::-webkit-scrollbar {
+    .views-pill::-webkit-scrollbar {
       display: none;
     }
 
@@ -545,191 +563,94 @@
       font-family: inherit;
       font-size: 12.5px;
       font-weight: 600;
-      padding: 7px 13px;
+      padding: 8px 14px;
       border-radius: 999px;
       cursor: pointer;
       white-space: nowrap;
-      transition: all 0.16s ease;
-      flex-shrink: 0;
+      transition: background 0.18s, color 0.18s;
     }
 
     .view-btn:hover {
-      background: var(--surface-hover);
       color: var(--text-primary);
+      background: var(--surface-hover);
     }
 
     .view-btn.active {
       background: var(--brand-green);
-      color: #ffffff;
-      box-shadow: 0 2px 8px rgba(101, 155, 53, 0.35);
+      color: #FFFFFF;
     }
 
-    /* Subtle Brand Watermark */
-    .brand-watermark {
-      position: fixed;
-      bottom: max(18px, env(safe-area-inset-bottom));
-      right: 16px;
-      z-index: 15;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      font-size: 11px;
-      font-weight: 600;
-      color: var(--text-muted);
-      background: var(--surface);
-      backdrop-filter: blur(8px);
-      -webkit-backdrop-filter: blur(8px);
-      border: 1px solid var(--border);
-      border-radius: 999px;
-      padding: 5px 11px;
-      pointer-events: none;
-      opacity: 0.9;
+    .view-divider {
+      width: 1px;
+      height: 18px;
+      background: var(--border);
+      margin: 0 3px;
+      flex-shrink: 0;
     }
 
-    .brand-dot {
-      width: 7px;
-      height: 7px;
-      border-radius: 50%;
-      background: linear-gradient(135deg, #659B35 33%, #F06440 33% 66%, #5B87D6 66%);
-      display: inline-block;
+    .view-btn.section-view.active {
+      background: var(--brand-coral);
+      color: #FFFFFF;
     }
 
-    /* Loading Overlay with Progress Bar */
-    .loader-badge {
+    /* Loading Overlay */
+    .loader-pill {
       position: fixed;
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
-      z-index: 65;
-      background: var(--surface-solid);
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      padding: 16px 22px;
-      display: none;
-      flex-direction: column;
-      align-items: center;
-      gap: 10px;
-      min-width: 220px;
+      z-index: 30;
+      padding: 12px 20px;
       font-size: 13px;
       font-weight: 600;
-      box-shadow: var(--shadow-lg);
-    }
-
-    .loader-badge.active {
-      display: flex;
-    }
-
-    .loader-top-row {
-      display: flex;
+      display: none;
       align-items: center;
       gap: 10px;
+    }
+
+    .loader-pill.show {
+      display: flex;
     }
 
     .spinner {
-      width: 18px;
-      height: 18px;
+      width: 16px;
+      height: 16px;
       border: 2.5px solid var(--brand-green-soft);
       border-top-color: var(--brand-green);
       border-radius: 50%;
-      animation: spin 0.75s linear infinite;
-      flex-shrink: 0;
-    }
-
-    .progress-track {
-      width: 100%;
-      height: 5px;
-      background: var(--border);
-      border-radius: 999px;
-      overflow: hidden;
-    }
-
-    .progress-fill {
-      height: 100%;
-      width: 25%;
-      background: linear-gradient(90deg, #659B35, #F06440, #5B87D6);
-      border-radius: 999px;
-      transition: width 0.2s ease;
+      animation: spin 0.8s linear infinite;
     }
 
     @keyframes spin {
       to { transform: rotate(360deg); }
     }
 
-    /* Toast Notification */
-    .toast {
-      position: fixed;
-      top: calc(max(12px, env(safe-area-inset-top)) + 68px);
-      left: 50%;
-      transform: translateX(-50%) translateY(-10px);
-      z-index: 70;
-      background: #1f2937;
-      color: #f9fafb;
-      font-size: 12.5px;
-      font-weight: 500;
-      padding: 9px 16px;
-      border-radius: 999px;
-      box-shadow: var(--shadow-md);
-      opacity: 0;
-      pointer-events: none;
-      transition: all 0.22s ease;
-      max-width: calc(100vw - 24px);
-      text-align: center;
-    }
-
-    .toast.show {
-      opacity: 1;
-      transform: translateX(-50%) translateY(0);
-    }
-
-    /* Responsive Breakpoints */
-    @media (max-width: 960px) {
-      .brand-watermark, .app-subtitle, .header-divider, .app-title-group {
-        display: none;
-      }
-      .polaruang-svg {
-        height: 26px;
-      }
-      .header-card {
-        padding: 5px 10px;
-      }
-    }
-
-    @media (max-width: 680px) {
-      .desktop-inline-stats {
-        display: none;
-      }
-      .mobile-pill-label {
-        display: inline;
-      }
-      .view-tools-desktop {
-        display: none !important;
-      }
-      .view-tools-mobile {
-        display: flex !important;
-      }
-      .tool-btn {
-        width: 30px;
-        height: 30px;
-      }
-      .project-switcher-wrap {
-        flex: 1;
-        max-width: none;
-      }
-      .project-dropdown {
-        position: fixed;
-        top: calc(max(12px, env(safe-area-inset-top)) + 56px);
+    @media (max-width: 820px) {
+      .top-bar {
+        flex-wrap: wrap;
+        top: 12px;
         left: 12px;
         right: 12px;
       }
-      .view-btn {
-        font-size: 12px;
-        padding: 7px 11px;
+      .selector-wrap {
+        order: 3;
+        width: 100%;
       }
-    }
-
-    @media (min-width: 681px) {
-      .view-tools-mobile {
-        display: none !important;
+      .selector-pill {
+        width: 100%;
+        justify-content: space-between;
+      }
+      .selector-trigger {
+        flex: 1;
+        max-width: none;
+        min-width: 0;
+      }
+      .detail-card {
+        top: 165px;
+      }
+      .view-btn {
+        padding: 7px 11px;
+        font-size: 12px;
       }
     }
   </style>
@@ -737,776 +658,814 @@
   <script type="importmap">
     {
       "imports": {
-        "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
-        "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
+        "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+        "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
       }
     }
   </script>
 </head>
 <body>
-  <canvas id="viewer-canvas"></canvas>
+  <div id="viewer-container"></div>
 
-  <!-- Top Header Bar -->
+  <!-- Top Controls -->
   <header class="top-bar">
-    <!-- Brand Logo -->
-    <div class="header-card">
-      <a href="#" class="brand-link" title="polaruang.studio — Portofolio 3D">
-        <svg class="polaruang-svg" viewBox="0 0 365 96" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="polaruang.studio">
-          <defs>
-            <clipPath id="globe-clip">
-              <circle cx="51" cy="40" r="14.5" />
-            </clipPath>
-          </defs>
-          <!-- Stylized Green 'P' -->
-          <path d="M 10 85 L 24 23 C 28 11, 39 7, 51 7 C 69 7, 83 21, 83 39 C 83 45, 81.5 49.5, 79.5 53 L 64.5 53 C 66.8 49.5, 68 44.8, 68 39.5 C 68 29.5, 60.5 22, 50.5 22 C 42 22, 35.5 27.5, 33.5 36 L 23 85 Z" fill="#659B35"/>
-          <!-- Crisp White Inner Cutout on Stem -->
-          <path d="M 15.2 79 L 23.2 42 L 26.8 42 L 18.8 79 Z" fill="#FFFFFF"/>
-          <!-- Orange Globe -->
-          <circle cx="51" cy="40" r="14.5" fill="#F06440"/>
-          <g clip-path="url(#globe-clip)" stroke="#FFFFFF" stroke-width="1.25" fill="none">
-            <line x1="51" y1="25" x2="51" y2="55" />
-            <path d="M 51 25.5 Q 42.5 40 51 54.5" />
-            <path d="M 51 25.5 Q 59.5 40 51 54.5" />
-            <line x1="36" y1="40" x2="66" y2="40" />
-            <path d="M 37.5 33.2 Q 51 36.2 64.5 33.2" />
-            <path d="M 37.5 46.8 Q 51 43.8 64.5 46.8" />
-          </g>
-          <!-- Three Blue Waves -->
-          <g stroke="#5B87D6" stroke-width="1.45" stroke-linecap="round" fill="none">
-            <path d="M 16 49 C 26 45, 37 53, 48 50 C 55 48, 61 50, 66 49" />
-            <path d="M 14.5 53.5 C 24.5 49.5, 35.5 57.5, 46.5 54.5 C 53.5 52.5, 59.5 54.5, 64.5 53.5" />
-            <path d="M 13 58 C 23 54, 34 62, 45 59 C 52 57, 58 59, 63 58" />
-          </g>
-          <!-- Wordmark: polaruang. studio -->
-          <text x="95" y="54" font-family="'Plus Jakarta Sans', 'Poppins', 'Montserrat', sans-serif" font-size="45" letter-spacing="-1.3" fill="var(--logo-wordmark)">
-            <tspan font-weight="800">pola</tspan><tspan font-weight="400">ruang.</tspan>
-          </text>
-          <text x="220" y="82" font-family="'Plus Jakarta Sans', 'Poppins', 'Montserrat', sans-serif" font-size="25" font-weight="400" letter-spacing="-0.3" fill="var(--logo-wordmark)">
-            studio
-          </text>
-        </svg>
+    <div class="top-left-stack">
+      <a href="./" class="pill brand-badge" title="polaruang.studio">
+        <div class="brand-mark">P</div>
+        <div class="brand-name">polaruang.<span>studio</span></div>
       </a>
 
-      <div class="header-divider"></div>
+      <button type="button" id="info-pill-btn" class="pill info-pill" title="Lihat detail dimensi & deskripsi bangunan">
+        <span class="info-dot">i</span>
+        <span class="info-text" id="info-summary">Memuat informasi bangunan...</span>
+      </button>
+    </div>
 
-      <div class="app-title-group">
-        <span class="app-title">PORTOFOLIO 3D</span>
-        <span class="app-subtitle">Interactive Architecture Gallery</span>
+    <!-- Center Project Switcher -->
+    <div class="selector-wrap">
+      <div class="pill selector-pill">
+        <button type="button" class="nav-arrow" id="prev-project" title="Proyek Sebelumnya" aria-label="Sebelumnya">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+        </button>
+
+        <button type="button" class="selector-trigger" id="selector-trigger">
+          <div class="selector-meta">
+            <div class="selector-kicker" id="current-kicker">PORTOFOLIO (1/1)</div>
+            <div class="selector-title" id="current-title">Memuat Karya...</div>
+          </div>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+
+        <button type="button" class="nav-arrow" id="next-project" title="Proyek Berikutnya" aria-label="Berikutnya">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+        </button>
+      </div>
+
+      <div class="pill project-menu" id="project-menu">
+        <div class="menu-label">PILIH KARYA POLARUANG.STUDIO</div>
+        <div id="project-list"></div>
       </div>
     </div>
 
-    <!-- Project Switcher Selector -->
-    <div class="project-switcher-wrap" id="project-switcher">
-      <button type="button" class="nav-arrow-btn" id="btn-prev-project" title="Proyek Sebelumnya" aria-label="Proyek Sebelumnya">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
-          <polyline points="15 18 9 12 15 6"/>
-        </svg>
+    <!-- Right Action Tools -->
+    <div class="pill tools-pill">
+      <button type="button" class="tool-btn" id="btn-screenshot" title="Simpan Foto PNG">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
       </button>
-
-      <button type="button" class="project-select-btn" id="btn-project-dropdown" aria-expanded="false">
-        <div class="project-select-text">
-          <span class="project-select-badge" id="active-project-category">PORTOFOLIO</span>
-          <span class="project-select-name" id="active-project-name">Memuat Karya Studio...</span>
-        </div>
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;opacity:0.7;">
-          <polyline points="6 9 12 15 18 9"/>
-        </svg>
+      <button type="button" class="tool-btn active" id="btn-edges" title="Garis Tepi SketchUp">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
       </button>
-
-      <button type="button" class="nav-arrow-btn" id="btn-next-project" title="Proyek Berikutnya" aria-label="Proyek Berikutnya">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
-          <polyline points="9 18 15 12 9 6"/>
-        </svg>
+      <button type="button" class="tool-btn" id="btn-rotate" title="Putar Otomatis">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
       </button>
-
-      <!-- Dropdown Project List -->
-      <div class="project-dropdown" id="project-dropdown">
-        <div class="dropdown-header-label">Pilih Karya polaruang.studio</div>
-        <div id="project-list-container"></div>
-      </div>
-    </div>
-
-    <!-- Right Desktop Tools -->
-    <div class="toolbar-group view-tools-desktop">
-      <button type="button" class="tool-btn" data-action="snapshot" title="Simpan Foto Tampilan (PNG)">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
-          <circle cx="12" cy="13" r="4"/>
-        </svg>
-      </button>
-
-      <button type="button" class="tool-btn active" data-action="edges" title="Garis Tepi (SketchUp Edges)">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
-          <polyline points="3.27 6.96 12 12.01 20.73 6.96"/>
-          <line x1="12" y1="22.08" x2="12" y2="12"/>
-        </svg>
-      </button>
-
-      <button type="button" class="tool-btn" data-action="autorotate" title="Putar Otomatis">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8"/>
-          <path d="M21 3v5h-5"/>
-        </svg>
-      </button>
-
-      <button type="button" class="tool-btn" data-action="theme" title="Ganti Tema Kanvas (Terang / Gelap)">
-        <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
-        </svg>
-        <svg class="icon-sun" style="display:none;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
-          <circle cx="12" cy="12" r="5"/>
-          <line x1="12" y1="1" x2="12" y2="3"/>
-          <line x1="12" y1="21" x2="12" y2="23"/>
-          <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
-          <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
-          <line x1="1" y1="12" x2="3" y2="12"/>
-          <line x1="21" y1="12" x2="23" y2="12"/>
-          <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
-          <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
-        </svg>
+      <button type="button" class="tool-btn" id="btn-theme" title="Ganti Tema Terang / Gelap">
+        <svg id="theme-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
       </button>
     </div>
   </header>
 
-  <!-- Sub-Bar: Info Proyek (Left) + Mobile View Controls (Right) -->
-  <div class="sub-bar">
-    <div class="info-widget">
-      <button type="button" class="info-pill-toggle" id="btn-info-toggle" aria-expanded="false">
-        <span class="info-icon-badge">i</span>
-        <span class="mobile-pill-label">Detail Karya</span>
-        <span class="desktop-inline-stats" id="desktop-stats-text">
-          12.38 &times; 16.10 &times; 6.25 m
-        </span>
-      </button>
-
-      <div class="info-popover" id="info-popover">
-        <div class="info-popover-title" id="popover-title">Villa Tropis Kontemporer 2 Lantai</div>
-        <div class="info-popover-loc" id="popover-loc">Bandung, Jawa Barat &bull; 2026</div>
-        <div class="info-popover-desc" id="popover-desc">
-          Eksplorasi ruang terbuka dengan bukaan kaca penuh, kisi kayu alami, dan sirkulasi udara silang.
-        </div>
-        <div class="info-popover-row">
-          <span>Dimensi (L &times; D &times; T):</span>
-          <strong id="popover-dims">12.38 &times; 16.10 &times; 6.25 m</strong>
-        </div>
-        <div class="info-popover-row">
-          <span>Detail Geometri:</span>
-          <strong id="popover-tris">35.050 segitiga</strong>
-        </div>
-        <div class="info-popover-note">
-          Geser 1 jari untuk memutar 360°, cubit untuk zoom, geser 2 jari untuk menggeser tampilan.
-        </div>
+  <!-- Project Detail Popover -->
+  <aside class="pill detail-card" id="detail-card">
+    <div class="detail-header">
+      <div>
+        <div class="selector-kicker" id="detail-cat-year">ARSITEKTUR • 2026</div>
+        <h2 class="detail-title" id="detail-title">Nama Bangunan</h2>
+      </div>
+      <button type="button" class="detail-close" id="detail-close" aria-label="Tutup">✕</button>
+    </div>
+    <div class="dim-grid">
+      <div class="dim-box">
+        <span>Lebar</span>
+        <strong id="dim-width">0.00 m</strong>
+      </div>
+      <div class="dim-box">
+        <span>Panjang</span>
+        <strong id="dim-length">0.00 m</strong>
+      </div>
+      <div class="dim-box">
+        <span>Tinggi</span>
+        <strong id="dim-height">0.00 m</strong>
       </div>
     </div>
+    <p class="detail-desc" id="detail-desc">Deskripsi konsep bangunan.</p>
+  </aside>
 
-    <!-- Mobile Compact Controls -->
-    <div class="toolbar-group view-tools-mobile" style="padding:4px;gap:3px;">
-      <button type="button" class="tool-btn" data-action="snapshot" title="Simpan Foto">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
-          <circle cx="12" cy="13" r="4"/>
-        </svg>
-      </button>
-      <button type="button" class="tool-btn active" data-action="edges" title="Garis Tepi">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
-          <polyline points="3.27 6.96 12 12.01 20.73 6.96"/>
-          <line x1="12" y1="22.08" x2="12" y2="12"/>
-        </svg>
-      </button>
-      <button type="button" class="tool-btn" data-action="autorotate" title="Putar Otomatis">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8"/>
-          <path d="M21 3v5h-5"/>
-        </svg>
-      </button>
-      <button type="button" class="tool-btn" data-action="theme" title="Tema Terang / Gelap">
-        <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
-        </svg>
-        <svg class="icon-sun" style="display:none;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
-          <circle cx="12" cy="12" r="5"/>
-          <line x1="12" y1="1" x2="12" y2="3"/>
-          <line x1="12" y1="21" x2="12" y2="23"/>
-          <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
-          <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
-          <line x1="1" y1="12" x2="3" y2="12"/>
-          <line x1="21" y1="12" x2="23" y2="12"/>
-          <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
-          <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
-        </svg>
-      </button>
-    </div>
+  <!-- Loading Indicator -->
+  <div class="pill loader-pill" id="loader-pill">
+    <div class="spinner"></div>
+    <span>Memuat model 3D...</span>
   </div>
 
-  <!-- Bottom Camera Preset Dock -->
-  <nav class="view-dock-wrapper" aria-label="Sudut Pandang Kamera">
-    <div class="view-dock" id="view-dock">
-      <button type="button" class="view-btn active" data-view="iso">Isometrik</button>
+  <!-- Bottom Camera & Section Dock -->
+  <div class="bottom-dock">
+    <!-- Section / Plan Cut Control Bar -->
+    <div class="pill section-panel" id="section-panel">
+      <span class="section-badge" id="section-mode-label">Mode Denah</span>
+
+      <div class="section-axis-group" id="potongan-axis-group" style="display: none;">
+        <button type="button" class="axis-btn active" data-axis="x">Potongan A–A</button>
+        <button type="button" class="axis-btn" data-axis="z">Potongan B–B</button>
+        <button type="button" class="axis-btn" id="btn-flip-cut" title="Balik Sisi Potongan">⇄ Balik</button>
+      </div>
+
+      <div class="slider-wrap">
+        <span id="slider-label">Elevasi Potong:</span>
+        <input type="range" id="section-slider" min="5" max="95" value="32" step="1" />
+        <span class="slider-val" id="slider-val">1.50 m</span>
+      </div>
+
+      <button type="button" class="reset-cut-btn" id="btn-close-section">Tutup Irisan</button>
+    </div>
+
+    <!-- Camera Presets -->
+    <nav class="pill views-pill" aria-label="Sudut Kamera & Irisan Bangunan">
+      <button type="button" class="view-btn active" data-view="isometric">Isometrik</button>
       <button type="button" class="view-btn" data-view="top">Atas</button>
       <button type="button" class="view-btn" data-view="front">Depan</button>
       <button type="button" class="view-btn" data-view="back">Belakang</button>
       <button type="button" class="view-btn" data-view="left">Kiri</button>
       <button type="button" class="view-btn" data-view="right">Kanan</button>
-    </div>
-  </nav>
-
-  <!-- Brand Watermark -->
-  <div class="brand-watermark">
-    <span class="brand-dot"></span>
-    <span>polaruang.studio</span>
+      <div class="view-divider"></div>
+      <button type="button" class="view-btn section-view" data-view="denah">Denah</button>
+      <button type="button" class="view-btn section-view" data-view="potongan">Potongan</button>
+    </nav>
   </div>
-
-  <!-- Loading Overlay -->
-  <div class="loader-badge" id="loader-badge">
-    <div class="loader-top-row">
-      <div class="spinner"></div>
-      <span id="loader-text">Memuat model 3D...</span>
-    </div>
-    <div class="progress-track">
-      <div class="progress-fill" id="loader-progress"></div>
-    </div>
-  </div>
-
-  <!-- Toast Notification -->
-  <div class="toast" id="toast"></div>
 
   <script type="module">
     import * as THREE from 'three';
     import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
     import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
     import { DRACOLoader } from 'three/addons/loaders/DRACOLoader.js';
-    import { MeshoptDecoder } from 'three/addons/libs/meshopt_decoder.module.js';
+    import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
 
-    const FALLBACK_PROJECTS = [
-      {
-        id: "villa-tropis-kontemporer",
-        title: "Villa Tropis Kontemporer 2 Lantai",
-        category: "Arsitektur Residensial",
-        location: "Bandung, Jawa Barat",
-        year: "2026",
-        description: "Eksplorasi ruang terbuka dengan bukaan kaca penuh, kisi kayu alami, dan sirkulasi udara silang untuk hunian tropis modern.",
-        file: "builtin:house"
-      },
-      {
-        id: "ruang-komersial-kafe-studio",
-        title: "Kafe & Creative Space Polaruang",
-        category: "Komersial & Retail",
-        location: "Jakarta Selatan",
-        year: "2026",
-        description: "Komposisi massa bangunan komersial 3 lantai dengan fasad curtain wall, kanopi teras hijau, dan tata ruang fleksibel.",
-        file: "builtin:commercial"
-      },
-      {
-        id: "paviliun-galeri-struktur-baja",
-        title: "Paviliun & Galeri Bentang Lebar",
-        category: "Hospitality & Villa",
-        location: "Ubud, Bali",
-        year: "2025",
-        description: "Struktur atap pelana bentang lebar dengan pencahayaan skylight atap monitor untuk ruang pamer dan studio kreatif.",
-        file: "builtin:warehouse"
-      }
-    ];
-
-    // DOM Elements
-    const canvas = document.getElementById('viewer-canvas');
-    const btnProjectDropdown = document.getElementById('btn-project-dropdown');
-    const projectDropdown = document.getElementById('project-dropdown');
-    const projectListContainer = document.getElementById('project-list-container');
-    const activeProjectCategory = document.getElementById('active-project-category');
-    const activeProjectName = document.getElementById('active-project-name');
-    const btnPrevProject = document.getElementById('btn-prev-project');
-    const btnNextProject = document.getElementById('btn-next-project');
-
-    const btnInfoToggle = document.getElementById('btn-info-toggle');
-    const infoPopover = document.getElementById('info-popover');
-    const desktopStatsText = document.getElementById('desktop-stats-text');
-    const popoverTitle = document.getElementById('popover-title');
-    const popoverLoc = document.getElementById('popover-loc');
-    const popoverDesc = document.getElementById('popover-desc');
-    const popoverDims = document.getElementById('popover-dims');
-    const popoverTris = document.getElementById('popover-tris');
-
-    const viewButtons = document.querySelectorAll('.view-btn');
-    const loaderBadge = document.getElementById('loader-badge');
-    const loaderText = document.getElementById('loader-text');
-    const loaderProgress = document.getElementById('loader-progress');
-    const toastEl = document.getElementById('toast');
-
-    // State
+    // --- State ---
     let projects = [];
-    let currentProjectIndex = 0;
+    let currentIndex = 0;
     let showEdges = true;
-    let isDarkTheme = false;
-    let activePreset = 'iso';
-    let currentModelGroup = null;
-    let edgeLines = [];
-    let modelCenter = new THREE.Vector3(0, 0, 0);
-    let modelSize = new THREE.Vector3(12.38, 6.25, 16.10);
-    let boundingRadius = 12;
+    let autoRotate = false;
+    let darkTheme = false;
 
-    // Camera Animation
-    let isAnimatingCamera = false;
-    let animStartTime = 0;
-    const animDuration = 450;
-    let camStartPos = new THREE.Vector3();
-    let camEndPos = new THREE.Vector3();
-    let targetStart = new THREE.Vector3();
-    let targetEnd = new THREE.Vector3();
+    // Section / Plan Cut State
+    let sectionMode = 'none'; // 'none' | 'denah' | 'potongan'
+    let sectionAxis = 'x';    // 'x' (Melintang A-A) | 'z' (Memanjang B-B)
+    let sectionFlip = false;
+    let sectionRatio = 0.32;  // 0.05 .. 0.95
 
-    // Renderer Setup
-    const renderer = new THREE.WebGLRenderer({
-      canvas,
-      antialias: true,
-      preserveDrawingBuffer: true,
-      powerPreference: 'high-performance'
-    });
+    let currentBounds = {
+      min: new THREE.Vector3(-4, 0, -6),
+      max: new THREE.Vector3(4, 7, 6),
+      size: new THREE.Vector3(8, 7, 12),
+      center: new THREE.Vector3(0, 3.5, 0)
+    };
+
+    // Camera smooth transition state
+    let camAnim = null;
+
+    // --- Three.js Setup ---
+    const container = document.getElementById('viewer-container');
+    const scene = new THREE.Scene();
+    scene.background = new THREE.Color(0xF5F6F4);
+
+    const camera = new THREE.PerspectiveCamera(42, window.innerWidth / window.innerHeight, 0.1, 1000);
+    camera.position.set(16, 13, 16);
+
+    const renderer = new THREE.WebGLRenderer({ antialias: true, preserveDrawingBuffer: true });
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     renderer.setSize(window.innerWidth, window.innerHeight);
-    renderer.outputColorSpace = THREE.SRGBColorSpace;
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    renderer.toneMappingExposure = 1.08;
+    renderer.toneMappingExposure = 1.05;
+    renderer.shadowMap.enabled = true;
+    renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+    renderer.localClippingEnabled = true;
+    container.appendChild(renderer.domElement);
 
-    const scene = new THREE.Scene();
-    scene.background = new THREE.Color('#eef0f3');
-
-    const camera = new THREE.PerspectiveCamera(42, window.innerWidth / window.innerHeight, 0.05, 5000);
-    camera.position.set(18, 15, 20);
+    const pmremGenerator = new THREE.PMREMGenerator(renderer);
+    scene.environment = pmremGenerator.fromScene(new RoomEnvironment(), 0.04).texture;
 
     const controls = new OrbitControls(camera, renderer.domElement);
     controls.enableDamping = true;
     controls.dampingFactor = 0.07;
-    controls.screenSpacePanning = true;
-    controls.maxDistance = 2000;
-    controls.minDistance = 0.2;
+    controls.maxPolarAngle = Math.PI * 0.495;
+    controls.minDistance = 1.5;
+    controls.maxDistance = 180;
 
-    controls.addEventListener('start', () => {
-      isAnimatingCamera = false;
-    });
-
-    // Lighting
-    const hemiLight = new THREE.HemisphereLight(0xffffff, 0xd8dce3, 1.35);
-    hemiLight.position.set(0, 50, 0);
+    // Lights
+    const hemiLight = new THREE.HemisphereLight(0xffffff, 0xdbe2e8, 0.7);
     scene.add(hemiLight);
 
-    const dirLight1 = new THREE.DirectionalLight(0xffffff, 1.15);
-    dirLight1.position.set(25, 42, 30);
-    scene.add(dirLight1);
+    const dirLight = new THREE.DirectionalLight(0xffffff, 1.35);
+    dirLight.position.set(22, 36, 24);
+    dirLight.castShadow = true;
+    dirLight.shadow.mapSize.set(2048, 2048);
+    dirLight.shadow.bias = -0.0005;
+    scene.add(dirLight);
 
-    const dirLight2 = new THREE.DirectionalLight(0xf1f5f9, 0.55);
-    dirLight2.position.set(-28, 20, -24);
-    scene.add(dirLight2);
+    // Subtle Architectural Ground Grid
+    let gridHelper = new THREE.GridHelper(60, 60, 0xCBD5E1, 0xE2E8F0);
+    gridHelper.position.y = -0.01;
+    scene.add(gridHelper);
 
-    // GLTF + Draco + Meshopt Loader (Supports compressed GLBs!)
+    // Model & Edge Containers
+    const modelGroup = new THREE.Group();
+    scene.add(modelGroup);
+
+    const edgeObjects = [];
+    const clipPlane = new THREE.Plane(new THREE.Vector3(0, -1, 0), 100);
+
+    // Visual Section Plane Indicator Frame
+    const cutGuideGeo = new THREE.PlaneGeometry(1, 1);
+    const cutGuideMat = new THREE.MeshBasicMaterial({
+      color: 0xF06440,
+      transparent: true,
+      opacity: 0.08,
+      side: THREE.DoubleSide,
+      depthWrite: false
+    });
+    const cutGuideMesh = new THREE.Mesh(cutGuideGeo, cutGuideMat);
+    const cutGuideOutline = new THREE.LineSegments(
+      new THREE.EdgesGeometry(cutGuideGeo),
+      new THREE.LineBasicMaterial({ color: 0xF06440, transparent: true, opacity: 0.65 })
+    );
+    cutGuideMesh.add(cutGuideOutline);
+    cutGuideMesh.visible = false;
+    scene.add(cutGuideMesh);
+
+    // GLTF + Draco Loader
     const gltfLoader = new GLTFLoader();
     const dracoLoader = new DRACOLoader();
     dracoLoader.setDecoderPath('https://www.gstatic.com/draco/versioned/decoders/1.5.6/');
     gltfLoader.setDRACOLoader(dracoLoader);
-    gltfLoader.setMeshoptDecoder(MeshoptDecoder);
 
-    function showToast(msg) {
-      toastEl.textContent = msg;
-      toastEl.classList.add('show');
-      clearTimeout(showToast._timer);
-      showToast._timer = setTimeout(() => {
-        toastEl.classList.remove('show');
-      }, 3200);
-    }
-
-    function setLoading(active, text = 'Memuat model 3D...', pct = 35) {
-      loaderText.textContent = text;
-      loaderProgress.style.width = `${Math.min(Math.max(pct, 10), 100)}%`;
-      loaderBadge.classList.toggle('active', active);
-    }
-
-    function clearCurrentModel() {
-      if (currentModelGroup) {
-        scene.remove(currentModelGroup);
-        currentModelGroup.traverse((child) => {
-          if (child.geometry) child.geometry.dispose();
-          if (child.material) {
-            if (Array.isArray(child.material)) {
-              child.material.forEach((m) => m.dispose());
-            } else {
-              child.material.dispose();
-            }
-          }
-        });
+    // --- Fallback Demo Models (jika projects.json belum diisi) ---
+    const FALLBACK_PROJECTS = [
+      {
+        slug: 'villa-tropis-kontemporer',
+        title: 'Villa Tropis Kontemporer',
+        category: 'Arsitektur Residensial',
+        location: 'Bandung, Jawa Barat',
+        year: '2026',
+        description: 'Hunian tropis modern dengan bukaan lebar, taman dalam ruang, dan tata massa 2 lantai yang memaksimalkan penghawaan silang.',
+        demoType: 'villa'
+      },
+      {
+        slug: 'kafe-creative-space',
+        title: 'Kafe & Creative Space Polaruang',
+        category: 'Komersial & Retail',
+        location: 'Jakarta Selatan',
+        year: '2026',
+        description: 'Ruang komersial 2 lantai dengan mezanin terbuka, fasad kisi kayu, dan area komunal terintegrasi.',
+        demoType: 'cafe'
+      },
+      {
+        slug: 'paviliun-galeri-bentang-lebar',
+        title: 'Paviliun & Galeri Bentang Lebar',
+        category: 'Hospitality & Villa',
+        location: 'Ubud, Bali',
+        year: '2025',
+        description: 'Struktur atap pelana lebar menaungi ruang pamer terbuka dan area peristirahatan dengan orientasi pemandangan alam.',
+        demoType: 'pavilion'
       }
-      edgeLines = [];
-      currentModelGroup = null;
+    ];
+
+    function buildProceduralDemo(type) {
+      const group = new THREE.Group();
+      const wallMat = new THREE.MeshStandardMaterial({ color: 0xF4F3EF, roughness: 0.75 });
+      const floorMat = new THREE.MeshStandardMaterial({ color: 0xD6CFC2, roughness: 0.85 });
+      const woodMat = new THREE.MeshStandardMaterial({ color: 0xB87A4B, roughness: 0.6 });
+      const roofMat = new THREE.MeshStandardMaterial({ color: 0x3D464D, roughness: 0.55 });
+      const accentMat = new THREE.MeshStandardMaterial({ color: 0x659B35, roughness: 0.65 });
+
+      const addBox = (w, h, d, x, y, z, mat) => {
+        const mesh = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), mat);
+        mesh.position.set(x, y, z);
+        mesh.castShadow = true;
+        mesh.receiveShadow = true;
+        group.add(mesh);
+        return mesh;
+      };
+
+      // Pelat Lantai 1 & Lantai 2 + Sekat Interior agar terlihat jelas saat Denah / Potongan
+      addBox(8, 0.25, 12, 0, 0.125, 0, floorMat);
+      // Dinding luar Lantai 1
+      addBox(8, 3.2, 0.2, 0, 1.85, -5.9, wallMat);
+      addBox(0.2, 3.2, 12, -3.9, 1.85, 0, wallMat);
+      addBox(0.2, 3.2, 12, 3.9, 1.85, 0, wallMat);
+      // Sekat Ruang Dalam Lantai 1 (Ruang Tamu, Kamar, Tangga)
+      addBox(4.2, 3.2, 0.18, -1.8, 1.85, -0.5, wallMat);
+      addBox(0.18, 3.2, 5.2, 0.3, 1.85, -3.2, wallMat);
+      addBox(2.4, 0.45, 2.0, -2.2, 0.48, 3.2, accentMat); // Sofa/furnitur ruang keluarga
+      addBox(2.0, 0.5, 2.2, -2.5, 0.5, -3.8, woodMat);    // Tempat tidur L1
+
+      // Pelat Lantai 2
+      addBox(8, 0.25, 11.2, 0, 3.55, -0.4, floorMat);
+      // Dinding Lantai 2 & Sekat
+      addBox(8, 3.0, 0.2, 0, 5.15, -5.9, wallMat);
+      addBox(0.2, 3.0, 11.2, -3.9, 5.15, -0.4, wallMat);
+      addBox(0.2, 3.0, 11.2, 3.9, 5.15, -0.4, wallMat);
+      addBox(8, 0.9, 0.15, 0, 4.1, 5.1, woodMat); // Balkon
+      addBox(4.0, 3.0, 0.18, 1.9, 5.15, -1.0, wallMat);
+
+      // Atap
+      const roof = addBox(8.8, 0.35, 12.8, 0, 6.85, -0.2, roofMat);
+      if (type === 'pavilion') roof.rotation.z = 0.06;
+
+      return group;
     }
 
-    function processLoadedObject(rootObject, projectMeta, triangleCount) {
+    // --- Section / Plan Clipping Logic ---
+    function applyClippingToModel(enabled) {
+      modelGroup.traverse((child) => {
+        if (child.isMesh && child.material) {
+          const mats = Array.isArray(child.material) ? child.material : [child.material];
+          mats.forEach((m) => {
+            if (enabled) {
+              if (m.userData.origSide === undefined) m.userData.origSide = m.side;
+              m.side = THREE.DoubleSide;
+              m.clippingPlanes = [clipPlane];
+              m.clipShadows = true;
+            } else {
+              if (m.userData.origSide !== undefined) m.side = m.userData.origSide;
+              m.clippingPlanes = null;
+            }
+            m.needsUpdate = true;
+          });
+        }
+      });
+
+      edgeObjects.forEach((line) => {
+        line.material.clippingPlanes = enabled ? [clipPlane] : null;
+        line.material.needsUpdate = true;
+      });
+    }
+
+    function updateSectionCut(moveCamera = false) {
+      const panel = document.getElementById('section-panel');
+      const axisGroup = document.getElementById('potongan-axis-group');
+      const modeLabel = document.getElementById('section-mode-label');
+      const sliderLabel = document.getElementById('slider-label');
+      const sliderVal = document.getElementById('slider-val');
+
+      if (sectionMode === 'none') {
+        panel.classList.remove('open');
+        cutGuideMesh.visible = false;
+        applyClippingToModel(false);
+        return;
+      }
+
+      panel.classList.add('open');
+      applyClippingToModel(true);
+
+      const { min, max, size, center } = currentBounds;
+      const pad = 0.6;
+
+      if (sectionMode === 'denah') {
+        modeLabel.textContent = 'Mode Denah';
+        axisGroup.style.display = 'none';
+        sliderLabel.textContent = 'Elevasi Potong:';
+
+        const cutY = min.y + sectionRatio * size.y;
+        clipPlane.normal.set(0, -1, 0);
+        clipPlane.constant = cutY;
+
+        sliderVal.textContent = `${(cutY - min.y).toFixed(2)} m`;
+
+        // Update visual cut plane frame
+        cutGuideMesh.visible = true;
+        cutGuideMesh.rotation.set(-Math.PI / 2, 0, 0);
+        cutGuideMesh.position.set(center.x, cutY, center.z);
+        cutGuideMesh.scale.set(size.x + pad, size.z + pad, 1);
+
+        if (moveCamera) {
+          const dist = Math.max(size.x, size.z) * 1.65 + 4;
+          animateCameraTo(
+            new THREE.Vector3(center.x, center.y + dist, center.z + 0.05),
+            center
+          );
+        }
+      } else if (sectionMode === 'potongan') {
+        modeLabel.textContent = 'Mode Potongan';
+        axisGroup.style.display = 'inline-flex';
+        sliderLabel.textContent = 'Posisi Irisan:';
+
+        if (sectionAxis === 'x') {
+          const cutX = min.x + sectionRatio * size.x;
+          clipPlane.normal.set(sectionFlip ? 1 : -1, 0, 0);
+          clipPlane.constant = sectionFlip ? -cutX : cutX;
+          sliderVal.textContent = `${(cutX - min.x).toFixed(2)} m`;
+
+          cutGuideMesh.visible = true;
+          cutGuideMesh.rotation.set(0, Math.PI / 2, 0);
+          cutGuideMesh.position.set(cutX, center.y, center.z);
+          cutGuideMesh.scale.set(size.z + pad, size.y + pad, 1);
+
+          if (moveCamera) {
+            const dist = Math.max(size.y, size.z) * 1.7 + 4;
+            const sideSign = sectionFlip ? -1 : 1;
+            animateCameraTo(
+              new THREE.Vector3(center.x + sideSign * dist, center.y + size.y * 0.08, center.z),
+              center
+            );
+          }
+        } else {
+          const cutZ = min.z + sectionRatio * size.z;
+          clipPlane.normal.set(0, 0, sectionFlip ? 1 : -1);
+          clipPlane.constant = sectionFlip ? -cutZ : cutZ;
+          sliderVal.textContent = `${(cutZ - min.z).toFixed(2)} m`;
+
+          cutGuideMesh.visible = true;
+          cutGuideMesh.rotation.set(0, 0, 0);
+          cutGuideMesh.position.set(center.x, center.y, cutZ);
+          cutGuideMesh.scale.set(size.x + pad, size.y + pad, 1);
+
+          if (moveCamera) {
+            const dist = Math.max(size.x, size.y) * 1.7 + 4;
+            const sideSign = sectionFlip ? -1 : 1;
+            animateCameraTo(
+              new THREE.Vector3(center.x, center.y + size.y * 0.08, center.z + sideSign * dist),
+              center
+            );
+          }
+        }
+      }
+    }
+
+    // --- Camera Presets & Animation ---
+    function animateCameraTo(targetPos, targetLook) {
+      camAnim = {
+        startPos: camera.position.clone(),
+        endPos: targetPos.clone(),
+        startTarget: controls.target.clone(),
+        endTarget: targetLook.clone(),
+        t: 0
+      };
+    }
+
+    function setCameraView(viewName) {
+      document.querySelectorAll('.view-btn').forEach((btn) => {
+        btn.classList.toggle('active', btn.dataset.view === viewName);
+      });
+
+      const { size, center } = currentBounds;
+      const maxDim = Math.max(size.x, size.y, size.z, 4);
+      const dist = maxDim * 1.65;
+
+      if (viewName === 'denah') {
+        sectionMode = 'denah';
+        sectionRatio = 0.32;
+        document.getElementById('section-slider').value = 32;
+        updateSectionCut(true);
+        return;
+      }
+
+      if (viewName === 'potongan') {
+        sectionMode = 'potongan';
+        sectionRatio = 0.50;
+        document.getElementById('section-slider').value = 50;
+        updateSectionCut(true);
+        return;
+      }
+
+      // Standard exterior views reset section cut
+      sectionMode = 'none';
+      updateSectionCut(false);
+
+      switch (viewName) {
+        case 'isometric':
+          animateCameraTo(
+            new THREE.Vector3(center.x + dist * 0.78, center.y + dist * 0.58, center.z + dist * 0.78),
+            center
+          );
+          break;
+        case 'top':
+          animateCameraTo(
+            new THREE.Vector3(center.x, center.y + dist * 1.25, center.z + 0.05),
+            center
+          );
+          break;
+        case 'front':
+          animateCameraTo(
+            new THREE.Vector3(center.x, center.y + size.y * 0.08, center.z + dist * 1.15),
+            center
+          );
+          break;
+        case 'back':
+          animateCameraTo(
+            new THREE.Vector3(center.x, center.y + size.y * 0.08, center.z - dist * 1.15),
+            center
+          );
+          break;
+        case 'left':
+          animateCameraTo(
+            new THREE.Vector3(center.x - dist * 1.15, center.y + size.y * 0.08, center.z),
+            center
+          );
+          break;
+        case 'right':
+          animateCameraTo(
+            new THREE.Vector3(center.x + dist * 1.15, center.y + size.y * 0.08, center.z),
+            center
+          );
+          break;
+      }
+    }
+
+    // --- Load & Display Project ---
+    function clearCurrentModel() {
+      while (modelGroup.children.length > 0) {
+        modelGroup.remove(modelGroup.children[0]);
+      }
+      edgeObjects.length = 0;
+    }
+
+    function setupLoadedObject(rootObj, project) {
       clearCurrentModel();
 
-      const wrapper = new THREE.Group();
-      wrapper.add(rootObject);
-
-      const rawBox = new THREE.Box3().setFromObject(rootObject);
+      // Normalize base to y = 0 and center X/Z
+      const rawBox = new THREE.Box3().setFromObject(rootObj);
       const rawCenter = rawBox.getCenter(new THREE.Vector3());
+      rootObj.position.x -= rawCenter.x;
+      rootObj.position.z -= rawCenter.z;
+      rootObj.position.y -= rawBox.min.y;
 
-      rootObject.position.x -= rawCenter.x;
-      rootObject.position.z -= rawCenter.z;
-      rootObject.position.y -= rawBox.min.y;
+      modelGroup.add(rootObj);
 
-      let computedTris = 0;
-
-      rootObject.traverse((child) => {
-        if (child.isMesh) {
-          if (child.material) {
-            const mats = Array.isArray(child.material) ? child.material : [child.material];
-            mats.forEach((m) => {
-              m.side = THREE.DoubleSide;
-              if (m.roughness !== undefined && m.roughness < 0.25) {
-                m.roughness = 0.65;
-              }
-            });
-          }
-
-          const geom = child.geometry;
-          if (geom) {
-            if (geom.index) {
-              computedTris += geom.index.count / 3;
-            } else if (geom.attributes && geom.attributes.position) {
-              computedTris += geom.attributes.position.count / 3;
-            }
-
-            const edgesGeo = new THREE.EdgesGeometry(geom, 24);
-            const edgesMat = new THREE.LineBasicMaterial({
-              color: isDarkTheme ? 0x94a3b8 : 0x1e242b,
-              transparent: true,
-              opacity: isDarkTheme ? 0.45 : 0.78
-            });
-            const segments = new THREE.LineSegments(edgesGeo, edgesMat);
-            segments.visible = showEdges;
-            child.add(segments);
-            edgeLines.push(segments);
-          }
+      // Generate SketchUp-style crisp edge lines
+      rootObj.traverse((child) => {
+        if (child.isMesh && child.geometry) {
+          child.castShadow = true;
+          child.receiveShadow = true;
+          const edgesGeo = new THREE.EdgesGeometry(child.geometry, 24);
+          const edgesMat = new THREE.LineBasicMaterial({
+            color: darkTheme ? 0xCBD5E1 : 0x1E293B,
+            transparent: true,
+            opacity: 0.55
+          });
+          const lineSeg = new THREE.LineSegments(edgesGeo, edgesMat);
+          lineSeg.visible = showEdges;
+          child.add(lineSeg);
+          edgeObjects.push(lineSeg);
         }
       });
 
-      scene.add(wrapper);
-      currentModelGroup = wrapper;
+      // Compute clean dimensions (Lebar, Panjang, Tinggi)
+      const box = new THREE.Box3().setFromObject(modelGroup);
+      const size = box.getSize(new THREE.Vector3());
+      const center = box.getCenter(new THREE.Vector3());
+      currentBounds = { min: box.min.clone(), max: box.max.clone(), size, center };
 
-      const finalBox = new THREE.Box3().setFromObject(wrapper);
-      modelCenter = finalBox.getCenter(new THREE.Vector3());
-      modelSize = finalBox.getSize(new THREE.Vector3());
-      const sphere = finalBox.getBoundingSphere(new THREE.Sphere());
-      boundingRadius = Math.max(sphere.radius, 0.5);
+      const widthStr = size.x.toFixed(2);
+      const lengthStr = size.z.toFixed(2);
+      const heightStr = size.y.toFixed(2);
+      const cat = project.category || 'Arsitektur';
 
-      camera.near = Math.max(boundingRadius / 500, 0.01);
-      camera.far = Math.max(boundingRadius * 80, 1000);
-      camera.updateProjectionMatrix();
+      // Info Pill & Drawer: Hanya Lebar x Panjang x Tinggi (tanpa jumlah segitiga)
+      document.getElementById('info-summary').textContent =
+        `${cat} • ${widthStr} × ${lengthStr} × ${heightStr} m`;
 
-      const finalTris = triangleCount || computedTris;
-      const dimText = `${modelSize.x.toFixed(2)} × ${modelSize.z.toFixed(2)} × ${modelSize.y.toFixed(2)} m`;
-      const triText = `${Math.round(finalTris).toLocaleString('id-ID')} segitiga`;
+      document.getElementById('detail-cat-year').textContent =
+        `${cat.toUpperCase()} • ${project.year || '2026'}`;
+      document.getElementById('detail-title').textContent = project.title;
+      document.getElementById('dim-width').textContent = `${widthStr} m`;
+      document.getElementById('dim-length').textContent = `${lengthStr} m`;
+      document.getElementById('dim-height').textContent = `${heightStr} m`;
+      document.getElementById('detail-desc').textContent =
+        project.description || 'Karya desain arsitektur 3D oleh polaruang.studio.';
 
-      desktopStatsText.textContent = `${projectMeta.category || 'Portofolio'} · ${dimText}`;
-      popoverTitle.textContent = projectMeta.title;
-      popoverLoc.textContent = [projectMeta.location, projectMeta.year].filter(Boolean).join(' • ') || 'polaruang.studio';
-      popoverDesc.textContent = projectMeta.description || 'Visualisasi model arsitektur 3D interaktif oleh polaruang.studio.';
-      popoverDims.textContent = dimText;
-      popoverTris.textContent = triText;
-
-      setCameraPreset('iso', false);
+      setCameraView('isometric');
     }
 
-    // Built-in Architectural Models (Fallback before real GLB files are uploaded)
-    function buildBuiltinModel(type) {
-      const group = new THREE.Group();
-      const wallMat = new THREE.MeshStandardMaterial({ color: 0xebe6dd, roughness: 0.85 });
-      const greenMat = new THREE.MeshStandardMaterial({ color: 0x659B35, roughness: 0.7 });
-      const orangeMat = new THREE.MeshStandardMaterial({ color: 0xF06440, roughness: 0.65 });
-      const blueMat = new THREE.MeshStandardMaterial({ color: 0x5B87D6, roughness: 0.6 });
-      const floorMat = new THREE.MeshStandardMaterial({ color: 0xc2c8d1, roughness: 0.9 });
-      const darkMat = new THREE.MeshStandardMaterial({ color: 0x262b33, roughness: 0.55 });
-      const woodMat = new THREE.MeshStandardMaterial({ color: 0x8a522b, roughness: 0.65 });
-
-      function box(w, h, d, x, y, z, mat) {
-        const m = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), mat);
-        m.position.set(x, y, z);
-        group.add(m);
-        return m;
-      }
-
-      if (type === 'builtin:commercial') {
-        box(15, 0.35, 20.5, 0, 0.175, 0, floorMat);
-        box(13.6, 10.5, 16.5, 0, 5.6, -1.2, wallMat);
-        box(12.2, 8.8, 0.3, 0, 5.4, 7.1, blueMat);
-        for (let x = -6.2; x <= 6.2; x += 3.1) {
-          box(0.35, 10.8, 1.1, x, 5.75, 7.2, darkMat);
-        }
-        box(14.2, 0.35, 1.8, 0, 3.8, 7.6, greenMat);
-        box(14.2, 0.35, 1.4, 0, 7.3, 7.4, orangeMat);
-        box(14.4, 0.45, 17.4, 0, 11.05, -1.0, darkMat);
-        return { obj: group, tris: 48200 };
-      } else if (type === 'builtin:warehouse') {
-        box(24, 0.4, 36, 0, 0.2, 0, floorMat);
-        box(22.4, 7.6, 34, 0, 4.2, 0, wallMat);
-        const leftRoof = box(12.2, 0.3, 35, -5.6, 8.9, 0, blueMat);
-        leftRoof.rotation.z = 0.22;
-        const rightRoof = box(12.2, 0.3, 35, 5.6, 8.9, 0, blueMat);
-        rightRoof.rotation.z = -0.22;
-        box(4.2, 1.1, 28, 0, 10.2, 0, orangeMat);
-        for (let z = -10; z <= 10; z += 10) {
-          box(0.3, 4.4, 4.2, 11.25, 2.6, z, darkMat);
-        }
-        return { obj: group, tris: 29400 };
-      } else {
-        box(12.38, 0.28, 16.10, 0, 0.14, 0, floorMat);
-        const wallH = 5.95, wallY = 0.28 + wallH / 2, t = 0.24;
-        box(12.38, wallH, t, 0, wallY, -7.93, wallMat);
-        box(t, wallH, 11.6, -6.07, wallY, -2.13, wallMat);
-        box(t, wallH, 11.6, 6.07, wallY, -2.13, wallMat);
-        box(3.4, wallH, t, -4.49, wallY, 3.55, wallMat);
-        box(4.8, wallH, t, 0.0, wallY, 3.55, wallMat);
-        box(3.6, wallH, t, 4.39, wallY, 3.55, wallMat);
-        box(t, wallH, 6.4, -2.75, wallY, -4.7, wallMat);
-        box(t, wallH, 6.4, 2.55, wallY, -4.7, wallMat);
-        box(5.3, wallH, t, 0.0, wallY, -3.2, wallMat);
-        box(1.85, 2.55, 0.32, 0.0, 1.55, 3.56, darkMat);
-        box(1.62, 2.40, 0.36, 0.0, 1.48, 3.56, woodMat);
-        for (let i = 0; i < 4; i++) {
-          box(12.38, 0.05, 0.05, 0, 0.55 + i * 0.32, 7.92, darkMat);
-        }
-        return { obj: group, tris: 35050 };
-      }
-    }
-
-    function computeCameraPositionForPreset(preset) {
-      const vFov = THREE.MathUtils.degToRad(camera.fov);
-      const hFov = 2 * Math.atan(Math.tan(vFov / 2) * camera.aspect);
-      const effectiveFov = Math.min(vFov, hFov);
-      const dist = (boundingRadius / Math.sin(effectiveFov / 2)) * 1.16;
-
-      const dir = new THREE.Vector3();
-      switch (preset) {
-        case 'top': dir.set(0, 1, 0.001).normalize(); break;
-        case 'front': dir.set(0, 0.04, 1).normalize(); break;
-        case 'back': dir.set(0, 0.04, -1).normalize(); break;
-        case 'left': dir.set(-1, 0.04, 0).normalize(); break;
-        case 'right': dir.set(1, 0.04, 0).normalize(); break;
-        case 'iso':
-        default: dir.set(0.72, 0.58, 0.82).normalize(); break;
-      }
-      return modelCenter.clone().addScaledVector(dir, dist);
-    }
-
-    function setCameraPreset(preset, animate = true) {
-      activePreset = preset;
-      viewButtons.forEach((btn) => btn.classList.toggle('active', btn.dataset.view === preset));
-      const desiredPos = computeCameraPositionForPreset(preset);
-
-      if (!animate) {
-        camera.position.copy(desiredPos);
-        controls.target.copy(modelCenter);
-        controls.update();
-        return;
-      }
-
-      camStartPos.copy(camera.position);
-      camEndPos.copy(desiredPos);
-      targetStart.copy(controls.target);
-      targetEnd.copy(modelCenter);
-      animStartTime = performance.now();
-      isAnimatingCamera = true;
-    }
-
-    function renderProjectDropdown() {
-      projectListContainer.innerHTML = '';
-      projects.forEach((proj, idx) => {
-        const btn = document.createElement('button');
-        btn.type = 'button';
-        btn.className = 'project-item' + (idx === currentProjectIndex ? ' active' : '');
-        const metaLine = [proj.location, proj.year].filter(Boolean).join(' • ') || 'polaruang.studio';
-        btn.innerHTML = `
-          <div class="project-item-info">
-            <span class="project-item-title">${proj.title}</span>
-            <span class="project-item-meta">${metaLine}</span>
-          </div>
-          <span class="project-item-tag">${proj.category || '3D'}</span>
-        `;
-        btn.addEventListener('click', () => {
-          projectDropdown.classList.remove('open');
-          btnProjectDropdown.setAttribute('aria-expanded', 'false');
-          loadProjectByIndex(idx);
-        });
-        projectListContainer.appendChild(btn);
-      });
-    }
-
-    function updateUrlQuery(projectId) {
-      try {
-        const url = new URL(window.location.href);
-        url.searchParams.set('project', projectId);
-        window.history.replaceState({}, '', url.toString());
-      } catch (_) {}
-    }
-
-    function loadProjectByIndex(index) {
+    async function loadProject(index) {
       if (!projects.length) return;
-      currentProjectIndex = (index + projects.length) % projects.length;
-      const proj = projects[currentProjectIndex];
+      currentIndex = (index + projects.length) % projects.length;
+      const project = projects[currentIndex];
 
-      activeProjectCategory.textContent = `${proj.category || 'PORTOFOLIO'} (${currentProjectIndex + 1}/${projects.length})`;
-      activeProjectName.textContent = proj.title;
-      renderProjectDropdown();
-      updateUrlQuery(proj.id);
+      // Update Header UI
+      const catUpper = (project.category || 'KARYA').toUpperCase();
+      document.getElementById('current-kicker').textContent =
+        `${catUpper} (${currentIndex + 1}/${projects.length})`;
+      document.getElementById('current-title').textContent = project.title;
 
-      if (!proj.file || proj.file.startsWith('builtin:')) {
-        const built = buildBuiltinModel(proj.file || 'builtin:house');
-        processLoadedObject(built.obj, proj, proj.triangles || built.tris);
+      // Update Deep-link URL without reload
+      if (project.slug) {
+        const url = new URL(window.location);
+        url.searchParams.set('project', project.slug);
+        window.history.replaceState({}, '', url);
+      }
+
+      renderProjectMenu();
+
+      const loaderEl = document.getElementById('loader-pill');
+      const modelPath = project.model || project.modelUrl || project.file || project.url;
+
+      if (!modelPath) {
+        const demoObj = buildProceduralDemo(project.demoType || 'villa');
+        setupLoadedObject(demoObj, project);
         return;
       }
 
-      setLoading(true, `Memuat ${proj.title}...`, 20);
+      loaderEl.classList.add('show');
       gltfLoader.load(
-        proj.file,
+        modelPath,
         (gltf) => {
-          setLoading(false);
-          processLoadedObject(gltf.scene, proj, proj.triangles || null);
+          loaderEl.classList.remove('show');
+          setupLoadedObject(gltf.scene, project);
         },
-        (xhr) => {
-          if (xhr.total > 0) {
-            const pct = Math.round((xhr.loaded / xhr.total) * 100);
-            setLoading(true, `Memuat model 3D (${pct}%)...`, pct);
-          }
-        },
+        undefined,
         (err) => {
-          setLoading(false);
-          console.error('Gagal memuat GLB:', err);
-          showToast(`File ${proj.file} belum tersedia, menampilkan pratinjau.`);
-          const fallback = buildBuiltinModel('builtin:house');
-          processLoadedObject(fallback.obj, proj, fallback.tris);
+          console.warn('Gagal memuat file GLB, menampilkan model pratinjau:', err);
+          loaderEl.classList.remove('show');
+          const fallbackObj = buildProceduralDemo('villa');
+          setupLoadedObject(fallbackObj, project);
         }
       );
     }
 
+    function renderProjectMenu() {
+      const listEl = document.getElementById('project-list');
+      listEl.innerHTML = '';
+
+      projects.forEach((proj, idx) => {
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = `project-item ${idx === currentIndex ? 'active' : ''}`;
+        btn.innerHTML = `
+          <div>
+            <div class="project-item-title">${proj.title}</div>
+            <div class="project-item-sub">${proj.location || 'Indonesia'} • ${proj.year || '2026'}</div>
+          </div>
+          <span class="cat-badge">${proj.category || 'Arsitektur'}</span>
+        `;
+        btn.addEventListener('click', () => {
+          document.getElementById('project-menu').classList.remove('open');
+          loadProject(idx);
+        });
+        listEl.appendChild(btn);
+      });
+    }
+
     async function initPortfolio() {
       try {
-        const res = await fetch(`projects.json?v=${Date.now()}`);
+        const res = await fetch(`./projects.json?v=${Date.now()}`);
         if (res.ok) {
           const data = await res.json();
-          if (data && Array.isArray(data.projects) && data.projects.length > 0) {
-            projects = data.projects;
+          const rawList = Array.isArray(data) ? data : (data.projects || []);
+          if (rawList.length > 0) {
+            projects = rawList.map((item, i) => ({
+              slug: item.slug || item.id || `proyek-${i + 1}`,
+              title: item.title || item.name || `Karya ${i + 1}`,
+              category: item.category || 'Arsitektur',
+              location: item.location || 'Indonesia',
+              year: item.year || '2026',
+              description: item.description || '',
+              model: item.model || item.modelUrl || item.file || item.glb || item.url || ''
+            }));
           }
         }
-      } catch (_) {}
+      } catch (e) {
+        console.warn('Menggunakan daftar proyek bawaan:', e);
+      }
 
       if (!projects.length) {
         projects = FALLBACK_PROJECTS;
       }
 
-      let initialIdx = 0;
-      try {
-        const params = new URLSearchParams(window.location.search);
-        const requestedId = params.get('project');
-        if (requestedId) {
-          const found = projects.findIndex((p) => p.id === requestedId);
-          if (found >= 0) initialIdx = found;
-        }
-      } catch (_) {}
+      // Check ?project=slug deep-link
+      const params = new URLSearchParams(window.location.search);
+      const targetSlug = params.get('project');
+      let startIdx = 0;
+      if (targetSlug) {
+        const found = projects.findIndex((p) => p.slug === targetSlug);
+        if (found !== -1) startIdx = found;
+      }
 
-      loadProjectByIndex(initialIdx);
+      loadProject(startIdx);
     }
 
-    // Event Listeners
-    btnProjectDropdown.addEventListener('click', (e) => {
+    // --- UI Event Listeners ---
+    document.getElementById('selector-trigger').addEventListener('click', (e) => {
       e.stopPropagation();
-      const willOpen = !projectDropdown.classList.contains('open');
-      projectDropdown.classList.toggle('open', willOpen);
-      btnProjectDropdown.setAttribute('aria-expanded', String(willOpen));
-    });
-
-    btnPrevProject.addEventListener('click', () => loadProjectByIndex(currentProjectIndex - 1));
-    btnNextProject.addEventListener('click', () => loadProjectByIndex(currentProjectIndex + 1));
-
-    function toggleEdges() {
-      showEdges = !showEdges;
-      document.querySelectorAll('[data-action="edges"]').forEach((b) => b.classList.toggle('active', showEdges));
-      edgeLines.forEach((line) => { line.visible = showEdges; });
-    }
-
-    function toggleAutoRotate() {
-      controls.autoRotate = !controls.autoRotate;
-      controls.autoRotateSpeed = 1.6;
-      document.querySelectorAll('[data-action="autorotate"]').forEach((b) => b.classList.toggle('active', controls.autoRotate));
-    }
-
-    function toggleTheme() {
-      isDarkTheme = !isDarkTheme;
-      document.body.classList.toggle('dark-theme', isDarkTheme);
-      scene.background = new THREE.Color(isDarkTheme ? '#111827' : '#eef0f3');
-      document.querySelectorAll('.icon-moon').forEach((el) => { el.style.display = isDarkTheme ? 'none' : 'block'; });
-      document.querySelectorAll('.icon-sun').forEach((el) => { el.style.display = isDarkTheme ? 'block' : 'none'; });
-      edgeLines.forEach((line) => {
-        line.material.color.setHex(isDarkTheme ? 0x94a3b8 : 0x1e242b);
-        line.material.opacity = isDarkTheme ? 0.45 : 0.78;
-      });
-    }
-
-    function takeSnapshot() {
-      renderer.render(scene, camera);
-      const proj = projects[currentProjectIndex] || { id: 'karya-polaruang' };
-      const a = document.createElement('a');
-      a.href = renderer.domElement.toDataURL('image/png');
-      a.download = `polaruang_${proj.id}_${activePreset}.png`;
-      a.click();
-      showToast('Foto tampilan 3D berhasil disimpan.');
-    }
-
-    document.querySelectorAll('[data-action="edges"]').forEach((b) => b.addEventListener('click', toggleEdges));
-    document.querySelectorAll('[data-action="autorotate"]').forEach((b) => b.addEventListener('click', toggleAutoRotate));
-    document.querySelectorAll('[data-action="theme"]').forEach((b) => b.addEventListener('click', toggleTheme));
-    document.querySelectorAll('[data-action="snapshot"]').forEach((b) => b.addEventListener('click', takeSnapshot));
-
-    btnInfoToggle.addEventListener('click', (e) => {
-      e.stopPropagation();
-      const willOpen = !infoPopover.classList.contains('open');
-      infoPopover.classList.toggle('open', willOpen);
-      btnInfoToggle.setAttribute('aria-expanded', String(willOpen));
+      document.getElementById('project-menu').classList.toggle('open');
     });
 
     document.addEventListener('click', (e) => {
-      if (!infoPopover.contains(e.target) && !btnInfoToggle.contains(e.target)) {
-        infoPopover.classList.remove('open');
-        btnInfoToggle.setAttribute('aria-expanded', 'false');
-      }
-      if (!projectDropdown.contains(e.target) && !btnProjectDropdown.contains(e.target)) {
-        projectDropdown.classList.remove('open');
-        btnProjectDropdown.setAttribute('aria-expanded', 'false');
-      }
+      const menu = document.getElementById('project-menu');
+      if (!menu.contains(e.target)) menu.classList.remove('open');
     });
 
-    viewButtons.forEach((btn) => {
-      btn.addEventListener('click', () => setCameraPreset(btn.dataset.view, true));
+    document.getElementById('prev-project').addEventListener('click', () => loadProject(currentIndex - 1));
+    document.getElementById('next-project').addEventListener('click', () => loadProject(currentIndex + 1));
+
+    // Info Card Toggle
+    document.getElementById('info-pill-btn').addEventListener('click', () => {
+      document.getElementById('detail-card').classList.toggle('open');
+    });
+    document.getElementById('detail-close').addEventListener('click', () => {
+      document.getElementById('detail-card').classList.remove('open');
     });
 
+    // Camera & Section Preset Buttons
+    document.querySelectorAll('.view-btn').forEach((btn) => {
+      btn.addEventListener('click', () => setCameraView(btn.dataset.view));
+    });
+
+    // Section Slider & Axis Controls
+    document.getElementById('section-slider').addEventListener('input', (e) => {
+      sectionRatio = Number(e.target.value) / 100;
+      updateSectionCut(false);
+    });
+
+    document.querySelectorAll('.axis-btn[data-axis]').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.axis-btn[data-axis]').forEach((b) => b.classList.remove('active'));
+        btn.classList.add('active');
+        sectionAxis = btn.dataset.axis;
+        updateSectionCut(true);
+      });
+    });
+
+    document.getElementById('btn-flip-cut').addEventListener('click', () => {
+      sectionFlip = !sectionFlip;
+      updateSectionCut(true);
+    });
+
+    document.getElementById('btn-close-section').addEventListener('click', () => {
+      setCameraView('isometric');
+    });
+
+    // Top Right Tools
+    document.getElementById('btn-edges').addEventListener('click', function () {
+      showEdges = !showEdges;
+      this.classList.toggle('active', showEdges);
+      edgeObjects.forEach((line) => (line.visible = showEdges));
+    });
+
+    document.getElementById('btn-rotate').addEventListener('click', function () {
+      autoRotate = !autoRotate;
+      this.classList.toggle('active', autoRotate);
+      controls.autoRotate = autoRotate;
+      controls.autoRotateSpeed = 1.6;
+    });
+
+    document.getElementById('btn-theme').addEventListener('click', function () {
+      darkTheme = !darkTheme;
+      document.body.classList.toggle('dark', darkTheme);
+      this.classList.toggle('active', darkTheme);
+      scene.background = new THREE.Color(darkTheme ? 0x121518 : 0xF5F6F4);
+
+      scene.remove(gridHelper);
+      gridHelper = new THREE.GridHelper(
+        60,
+        60,
+        darkTheme ? 0x334155 : 0xCBD5E1,
+        darkTheme ? 0x1E293B : 0xE2E8F0
+      );
+      gridHelper.position.y = -0.01;
+      scene.add(gridHelper);
+
+      edgeObjects.forEach((line) => {
+        line.material.color.setHex(darkTheme ? 0xCBD5E1 : 0x1E293B);
+      });
+    });
+
+    document.getElementById('btn-screenshot').addEventListener('click', () => {
+      const prevGuide = cutGuideMesh.visible;
+      cutGuideMesh.visible = false;
+      renderer.render(scene, camera);
+      const dataUrl = renderer.domElement.toDataURL('image/png');
+      cutGuideMesh.visible = prevGuide;
+
+      const link = document.createElement('a');
+      const slug = projects[currentIndex]?.slug || 'polaruang-3d';
+      link.download = `${slug}-${sectionMode !== 'none' ? sectionMode : 'view'}.png`;
+      link.href = dataUrl;
+      link.click();
+    });
+
+    // Resize
     window.addEventListener('resize', () => {
       camera.aspect = window.innerWidth / window.innerHeight;
       camera.updateProjectionMatrix();
       renderer.setSize(window.innerWidth, window.innerHeight);
     });
 
-    function animate(now) {
+    // Render Loop
+    function animate() {
       requestAnimationFrame(animate);
-      if (isAnimatingCamera) {
-        const elapsed = now - animStartTime;
-        const t = Math.min(elapsed / animDuration, 1);
-        const ease = 1 - Math.pow(1 - t, 3);
-        camera.position.lerpVectors(camStartPos, camEndPos, ease);
-        controls.target.lerpVectors(targetStart, targetEnd, ease);
-        if (t >= 1) isAnimatingCamera = false;
+
+      if (camAnim) {
+        camAnim.t = Math.min(1, camAnim.t + 0.06);
+        const ease = 1 - Math.pow(1 - camAnim.t, 3);
+        camera.position.lerpVectors(camAnim.startPos, camAnim.endPos, ease);
+        controls.target.lerpVectors(camAnim.startTarget, camAnim.endTarget, ease);
+        if (camAnim.t >= 1) camAnim = null;
       }
+
       controls.update();
       renderer.render(scene, camera);
     }
 
     initPortfolio();
-    requestAnimationFrame(animate);
+    animate();
   </script>
 </body>
 </html>
