@@ -6,7 +6,7 @@
   <title>polaruang.studio — Portofolio Arsitektur 3D</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
     :root {
       --brand-green: #659B35;
@@ -14,7 +14,7 @@
       --brand-coral: #F06440;
       --brand-blue: #5B87D6;
       --bg-canvas: #F5F6F4;
-      --surface: rgba(255, 255, 255, 0.92);
+      --surface: rgba(255, 255, 255, 0.94);
       --surface-solid: #FFFFFF;
       --surface-hover: #F3F5F2;
       --border: rgba(17, 24, 39, 0.10);
@@ -25,7 +25,7 @@
 
     body.dark {
       --bg-canvas: #121518;
-      --surface: rgba(26, 31, 37, 0.92);
+      --surface: rgba(26, 31, 37, 0.94);
       --surface-solid: #1A1F25;
       --surface-hover: #242B33;
       --border: rgba(255, 255, 255, 0.11);
@@ -102,50 +102,40 @@
       display: inline-flex;
       align-items: center;
       gap: 10px;
-      padding: 10px 16px;
+      padding: 8px 18px 8px 12px;
+      border-radius: 999px;
       text-decoration: none;
       color: var(--text-primary);
     }
 
-    .brand-mark {
-      width: 28px;
-      height: 28px;
-      border-radius: 8px;
-      background: linear-gradient(135deg, var(--brand-green), #4D7C25);
-      display: grid;
-      place-items: center;
-      color: #fff;
-      font-weight: 700;
-      font-size: 14px;
-      position: relative;
-      overflow: hidden;
+    .brand-logo-svg {
+      width: 36px;
+      height: 36px;
       flex-shrink: 0;
-    }
-
-    .brand-mark::after {
-      content: "";
-      position: absolute;
-      right: -4px;
-      bottom: -4px;
-      width: 12px;
-      height: 12px;
-      background: var(--brand-coral);
-      border-radius: 50%;
-    }
-
-    .brand-name {
-      font-weight: 700;
-      font-size: 15px;
-      letter-spacing: -0.02em;
-      line-height: 1.1;
-    }
-
-    .brand-name span {
       display: block;
-      font-size: 10px;
-      font-weight: 600;
+    }
+
+    .brand-wordmark {
+      display: inline-flex;
+      align-items: baseline;
+      font-weight: 800;
+      font-size: 17px;
+      letter-spacing: -0.025em;
+      line-height: 1;
+      color: var(--text-primary);
+    }
+
+    .brand-wordmark .dot {
+      color: var(--text-primary);
+    }
+
+    .brand-wordmark .studio-ext {
+      font-size: 11.5px;
+      font-weight: 700;
       color: var(--text-secondary);
-      letter-spacing: 0.02em;
+      margin-left: 1px;
+      transform: translateY(4px);
+      display: inline-block;
     }
 
     /* Info Dimension Pill */
@@ -364,7 +354,7 @@
     /* Project Detail Drawer / Card */
     .detail-card {
       position: fixed;
-      top: 122px;
+      top: 126px;
       left: 16px;
       z-index: 25;
       width: min(350px, calc(100vw - 32px));
@@ -646,7 +636,7 @@
         min-width: 0;
       }
       .detail-card {
-        top: 165px;
+        top: 168px;
       }
       .view-btn {
         padding: 7px 11px;
@@ -671,8 +661,29 @@
   <header class="top-bar">
     <div class="top-left-stack">
       <a href="./" class="pill brand-badge" title="polaruang.studio">
-        <div class="brand-mark">P</div>
-        <div class="brand-name">polaruang.<span>studio</span></div>
+        <!-- Embedded LOGO_POLARUANG.svg -->
+        <svg class="brand-logo-svg" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg" aria-label="Logo polaruang.studio">
+          <path fill="#669926" d="M275 50 C145 50 58 145 58 270 C58 312 69 348 89 378 L48 456 L112 456 L142 405 C175 432 220 448 275 448 C372 448 446 392 465 305 L385 305 C370 352 328 382 275 382 C185 382 128 325 128 248 C128 170 185 116 275 116 C328 116 370 146 385 192 L465 192 C446 105 372 50 275 50 Z" />
+          <path fill="#FFFFFF" d="M128 248 C128 170 185 116 275 116 C328 116 370 146 385 192 L475 192 L475 212 L392 212 L392 285 L475 285 L475 305 L385 305 C370 352 328 382 275 382 C185 382 128 325 128 248 Z" />
+          <circle cx="268" cy="248" r="88" fill="#FF704D" />
+          <g fill="none" stroke="#FFFFFF" stroke-width="6">
+            <line x1="268" y1="160" x2="268" y2="336" />
+            <line x1="180" y1="248" x2="356" y2="248" />
+            <ellipse cx="268" cy="248" rx="44" ry="88" />
+            <path d="M 192 204 Q 268 226 344 204" />
+            <path d="M 192 292 Q 268 270 344 292" />
+          </g>
+          <g fill="none" stroke="#0B3D91" stroke-width="5.5" stroke-linecap="round">
+            <path d="M 86 355 Q 150 285 245 315 T 395 310" />
+            <path d="M 74 378 Q 145 322 230 342 T 370 338" />
+            <path d="M 96 402 Q 155 362 215 375" />
+            <path d="M 255 368 Q 305 376 345 362" />
+          </g>
+        </svg>
+
+        <span class="brand-wordmark">
+          polaruang<span class="dot">.</span><span class="studio-ext">studio</span>
+        </span>
       </a>
 
       <button type="button" id="info-pill-btn" class="pill info-pill" title="Lihat detail dimensi & deskripsi bangunan">
@@ -798,18 +809,16 @@
     import { DRACOLoader } from 'three/addons/loaders/DRACOLoader.js';
     import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
 
-    // --- State ---
     let projects = [];
     let currentIndex = 0;
     let showEdges = true;
     let autoRotate = false;
     let darkTheme = false;
 
-    // Section / Plan Cut State
-    let sectionMode = 'none'; // 'none' | 'denah' | 'potongan'
-    let sectionAxis = 'x';    // 'x' (Melintang A-A) | 'z' (Memanjang B-B)
+    let sectionMode = 'none';
+    let sectionAxis = 'x';
     let sectionFlip = false;
-    let sectionRatio = 0.32;  // 0.05 .. 0.95
+    let sectionRatio = 0.32;
 
     let currentBounds = {
       min: new THREE.Vector3(-4, 0, -6),
@@ -818,10 +827,8 @@
       center: new THREE.Vector3(0, 3.5, 0)
     };
 
-    // Camera smooth transition state
     let camAnim = null;
 
-    // --- Three.js Setup ---
     const container = document.getElementById('viewer-container');
     const scene = new THREE.Scene();
     scene.background = new THREE.Color(0xF5F6F4);
@@ -849,7 +856,6 @@
     controls.minDistance = 1.5;
     controls.maxDistance = 180;
 
-    // Lights
     const hemiLight = new THREE.HemisphereLight(0xffffff, 0xdbe2e8, 0.7);
     scene.add(hemiLight);
 
@@ -860,19 +866,16 @@
     dirLight.shadow.bias = -0.0005;
     scene.add(dirLight);
 
-    // Subtle Architectural Ground Grid
     let gridHelper = new THREE.GridHelper(60, 60, 0xCBD5E1, 0xE2E8F0);
     gridHelper.position.y = -0.01;
     scene.add(gridHelper);
 
-    // Model & Edge Containers
     const modelGroup = new THREE.Group();
     scene.add(modelGroup);
 
     const edgeObjects = [];
     const clipPlane = new THREE.Plane(new THREE.Vector3(0, -1, 0), 100);
 
-    // Visual Section Plane Indicator Frame
     const cutGuideGeo = new THREE.PlaneGeometry(1, 1);
     const cutGuideMat = new THREE.MeshBasicMaterial({
       color: 0xF06440,
@@ -890,13 +893,11 @@
     cutGuideMesh.visible = false;
     scene.add(cutGuideMesh);
 
-    // GLTF + Draco Loader
     const gltfLoader = new GLTFLoader();
     const dracoLoader = new DRACOLoader();
     dracoLoader.setDecoderPath('https://www.gstatic.com/draco/versioned/decoders/1.5.6/');
     gltfLoader.setDRACOLoader(dracoLoader);
 
-    // --- Fallback Demo Models (jika projects.json belum diisi) ---
     const FALLBACK_PROJECTS = [
       {
         slug: 'villa-tropis-kontemporer',
@@ -944,35 +945,28 @@
         return mesh;
       };
 
-      // Pelat Lantai 1 & Lantai 2 + Sekat Interior agar terlihat jelas saat Denah / Potongan
       addBox(8, 0.25, 12, 0, 0.125, 0, floorMat);
-      // Dinding luar Lantai 1
       addBox(8, 3.2, 0.2, 0, 1.85, -5.9, wallMat);
       addBox(0.2, 3.2, 12, -3.9, 1.85, 0, wallMat);
       addBox(0.2, 3.2, 12, 3.9, 1.85, 0, wallMat);
-      // Sekat Ruang Dalam Lantai 1 (Ruang Tamu, Kamar, Tangga)
       addBox(4.2, 3.2, 0.18, -1.8, 1.85, -0.5, wallMat);
       addBox(0.18, 3.2, 5.2, 0.3, 1.85, -3.2, wallMat);
-      addBox(2.4, 0.45, 2.0, -2.2, 0.48, 3.2, accentMat); // Sofa/furnitur ruang keluarga
-      addBox(2.0, 0.5, 2.2, -2.5, 0.5, -3.8, woodMat);    // Tempat tidur L1
+      addBox(2.4, 0.45, 2.0, -2.2, 0.48, 3.2, accentMat);
+      addBox(2.0, 0.5, 2.2, -2.5, 0.5, -3.8, woodMat);
 
-      // Pelat Lantai 2
       addBox(8, 0.25, 11.2, 0, 3.55, -0.4, floorMat);
-      // Dinding Lantai 2 & Sekat
       addBox(8, 3.0, 0.2, 0, 5.15, -5.9, wallMat);
       addBox(0.2, 3.0, 11.2, -3.9, 5.15, -0.4, wallMat);
       addBox(0.2, 3.0, 11.2, 3.9, 5.15, -0.4, wallMat);
-      addBox(8, 0.9, 0.15, 0, 4.1, 5.1, woodMat); // Balkon
+      addBox(8, 0.9, 0.15, 0, 4.1, 5.1, woodMat);
       addBox(4.0, 3.0, 0.18, 1.9, 5.15, -1.0, wallMat);
 
-      // Atap
       const roof = addBox(8.8, 0.35, 12.8, 0, 6.85, -0.2, roofMat);
       if (type === 'pavilion') roof.rotation.z = 0.06;
 
       return group;
     }
 
-    // --- Section / Plan Clipping Logic ---
     function applyClippingToModel(enabled) {
       modelGroup.traverse((child) => {
         if (child.isMesh && child.material) {
@@ -1029,7 +1023,6 @@
 
         sliderVal.textContent = `${(cutY - min.y).toFixed(2)} m`;
 
-        // Update visual cut plane frame
         cutGuideMesh.visible = true;
         cutGuideMesh.rotation.set(-Math.PI / 2, 0, 0);
         cutGuideMesh.position.set(center.x, cutY, center.z);
@@ -1089,7 +1082,6 @@
       }
     }
 
-    // --- Camera Presets & Animation ---
     function animateCameraTo(targetPos, targetLook) {
       camAnim = {
         startPos: camera.position.clone(),
@@ -1125,7 +1117,6 @@
         return;
       }
 
-      // Standard exterior views reset section cut
       sectionMode = 'none';
       updateSectionCut(false);
 
@@ -1169,7 +1160,6 @@
       }
     }
 
-    // --- Load & Display Project ---
     function clearCurrentModel() {
       while (modelGroup.children.length > 0) {
         modelGroup.remove(modelGroup.children[0]);
@@ -1180,7 +1170,6 @@
     function setupLoadedObject(rootObj, project) {
       clearCurrentModel();
 
-      // Normalize base to y = 0 and center X/Z
       const rawBox = new THREE.Box3().setFromObject(rootObj);
       const rawCenter = rawBox.getCenter(new THREE.Vector3());
       rootObj.position.x -= rawCenter.x;
@@ -1189,7 +1178,6 @@
 
       modelGroup.add(rootObj);
 
-      // Generate SketchUp-style crisp edge lines
       rootObj.traverse((child) => {
         if (child.isMesh && child.geometry) {
           child.castShadow = true;
@@ -1207,7 +1195,6 @@
         }
       });
 
-      // Compute clean dimensions (Lebar, Panjang, Tinggi)
       const box = new THREE.Box3().setFromObject(modelGroup);
       const size = box.getSize(new THREE.Vector3());
       const center = box.getCenter(new THREE.Vector3());
@@ -1218,7 +1205,6 @@
       const heightStr = size.y.toFixed(2);
       const cat = project.category || 'Arsitektur';
 
-      // Info Pill & Drawer: Hanya Lebar x Panjang x Tinggi (tanpa jumlah segitiga)
       document.getElementById('info-summary').textContent =
         `${cat} • ${widthStr} × ${lengthStr} × ${heightStr} m`;
 
@@ -1239,13 +1225,11 @@
       currentIndex = (index + projects.length) % projects.length;
       const project = projects[currentIndex];
 
-      // Update Header UI
       const catUpper = (project.category || 'KARYA').toUpperCase();
       document.getElementById('current-kicker').textContent =
         `${catUpper} (${currentIndex + 1}/${projects.length})`;
       document.getElementById('current-title').textContent = project.title;
 
-      // Update Deep-link URL without reload
       if (project.slug) {
         const url = new URL(window.location);
         url.searchParams.set('project', project.slug);
@@ -1329,7 +1313,6 @@
         projects = FALLBACK_PROJECTS;
       }
 
-      // Check ?project=slug deep-link
       const params = new URLSearchParams(window.location.search);
       const targetSlug = params.get('project');
       let startIdx = 0;
@@ -1341,7 +1324,6 @@
       loadProject(startIdx);
     }
 
-    // --- UI Event Listeners ---
     document.getElementById('selector-trigger').addEventListener('click', (e) => {
       e.stopPropagation();
       document.getElementById('project-menu').classList.toggle('open');
@@ -1355,7 +1337,6 @@
     document.getElementById('prev-project').addEventListener('click', () => loadProject(currentIndex - 1));
     document.getElementById('next-project').addEventListener('click', () => loadProject(currentIndex + 1));
 
-    // Info Card Toggle
     document.getElementById('info-pill-btn').addEventListener('click', () => {
       document.getElementById('detail-card').classList.toggle('open');
     });
@@ -1363,12 +1344,10 @@
       document.getElementById('detail-card').classList.remove('open');
     });
 
-    // Camera & Section Preset Buttons
     document.querySelectorAll('.view-btn').forEach((btn) => {
       btn.addEventListener('click', () => setCameraView(btn.dataset.view));
     });
 
-    // Section Slider & Axis Controls
     document.getElementById('section-slider').addEventListener('input', (e) => {
       sectionRatio = Number(e.target.value) / 100;
       updateSectionCut(false);
@@ -1392,7 +1371,6 @@
       setCameraView('isometric');
     });
 
-    // Top Right Tools
     document.getElementById('btn-edges').addEventListener('click', function () {
       showEdges = !showEdges;
       this.classList.toggle('active', showEdges);
@@ -1441,14 +1419,12 @@
       link.click();
     });
 
-    // Resize
     window.addEventListener('resize', () => {
       camera.aspect = window.innerWidth / window.innerHeight;
       camera.updateProjectionMatrix();
       renderer.setSize(window.innerWidth, window.innerHeight);
     });
 
-    // Render Loop
     function animate() {
       requestAnimationFrame(animate);
 
